@@ -1,4 +1,4 @@
-class Pessoa:
+class Pessoa():
     def __init__(self, nome:str, celular: str, cpf: str):
         self.__nome = nome
         self.__celular = celular
