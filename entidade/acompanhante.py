@@ -1,6 +1,6 @@
 from pessoa import Pessoa
 
-class Paciente(Pessoa):
+class Acompanhante(Pessoa):
     def __init__(self, nome: str, celular: str, cpf: str, idade: int):
         super().__init__(nome, celular, cpf)
         self.__idade = idade

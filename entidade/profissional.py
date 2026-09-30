@@ -1,6 +1,6 @@
 from pessoa import Pessoa
 
-class Profissional:
+class Profissional(Pessoa):
     def __init__(self, nome: str, celular: str, cpf: str, especialidade: str, registro_profissional: str):
         super().__init__(nome, celular, cpf)
         self.__especialidade = especialidade

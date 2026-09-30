@@ -4,15 +4,15 @@ from atendimento import Atendimento
 from paciente import Paciente
 
 class Pagamento(ABC):
-    def __init__(self, data: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float):
-        self.__data = data
+    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float):
+        self.__data_pagamento = data_pagamento
         self.__atendimento = atendimento
         self.__paciente = paciente
         self.__valor_pago = valor_pago
 
     @property
-    def data(self):
-        return self.__data
+    def data_pagamento(self):
+        return self.__data_pagamento
 
     @property
     def atendimento(self):
@@ -26,9 +26,9 @@ class Pagamento(ABC):
     def valor_pago(self):
         return self.__valor_pago
 
-    @data.setter
-    def data(self, data: date):
-        self.__data = data
+    @data_pagamento.setter
+    def data_pagamento(self, data_pagamento: date):
+        self.__data_pagamento = data_pagamento
 
     @atendimento.setter
     def atendimento(self, atendimento: Atendimento):

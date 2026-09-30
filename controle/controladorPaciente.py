@@ -1,9 +1,13 @@
 from entidade.paciente import Paciente
 
-class Controladorpaciente:
+class ControladorPaciente:
     def __init__(self):
         self.__pacientes = []
 
+    @property
+    def pacientes(self):
+        return self.__pacientes
+    
     def cadastrar_paciente(self, nome, celular, cpf, idade):
         for paciente in self.__pacientes:
             if paciente.cpf == cpf:
