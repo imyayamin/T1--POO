@@ -1,6 +1,6 @@
 from entidade.acompanhante import Acompanhante
 
-class Controladoracompanhante:
+class ControladorAcompanhante:
     def __init__(self):
         self.__acompanhantes = []
 

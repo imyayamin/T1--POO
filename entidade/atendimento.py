@@ -4,7 +4,7 @@ from clinica import Clinica
 from datetime import date, time
 
 class Atendimento:
-    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: Profissional, data: date, horario_inicio: time, horario_fim: time, tipoAtendimento: str, valor: float):
+    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: Profissional, data: date, horario_inicio: time, horario_fim: time, tipoAtendimento: str, valor: float, acompanhante=None):
         self.__clinica = clinica
         self.__paciente = paciente
         self.__profissional = profissional
@@ -13,6 +13,7 @@ class Atendimento:
         self.__horario_fim = horario_fim
         self.__tipoAtendimento = tipoAtendimento
         self.__valor = valor
+        self.__acompanhante = acompanhante
 
     @property
     def clinica(self):
@@ -45,6 +46,10 @@ class Atendimento:
     @property
     def valor(self):
         return self.__valor
+
+    @property
+    def acompanhante(self):
+        return self.__acompanhante
 
     @clinica.setter
     def clinica(self, clinica: Clinica):

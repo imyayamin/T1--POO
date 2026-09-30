@@ -20,12 +20,16 @@ class ControladorAtendimento:
         self.__controladorAcompanhante = controladorAcompanhante
 
 
-    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor):
+    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante = None):
         if paciente not in self.__controladorPaciente.pacientes:
             return "Paciente não cadastrado!"
 
         if paciente.idade < 18:
-            return self.__controladorAcompanhante.cadastrar_acompanhante()
+            if acompanhante is None:
+                return "Paciente menor de idade precisa de acompanhante!"
+
+            if acompanhante not in self.__controladorAcompanhante.acompanhantes:
+                return "Acompanhante não cadastrado!"
 
         if horario_inicio < clinica.horario_funcionamento_inicial:
             return "Horário de inicio fora do funcionamento da clinica!"
@@ -40,7 +44,7 @@ class ControladorAtendimento:
              if (atendimento.data == data and atendimento.profissional == profissional and horario_inicio < atendimento.horario_fim and horario_fim > atendimento.horario_inicio):
                 return "Horário não disponível!"
 
-        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor)
+        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
         self.__atendimentos.append(novoAtendimento)
         
         return "Atendimento agendado com sucesso!"
