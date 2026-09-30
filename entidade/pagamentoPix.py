@@ -1,4 +1,4 @@
-from pagamento import Pagamento
+from abstractPagamento import Pagamento
 from datetime import date
 from atendimento import Atendimento
 from paciente import Paciente
@@ -10,7 +10,7 @@ class PagamentoPix(Pagamento):
 
     @property
     def cpf_pagador(self):
-        return self.cpf_pagador
+        return self.__cpf_pagador
 
     @cpf_pagador.setter
     def cpf_pagador(self, cpf_pagador: str):

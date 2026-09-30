@@ -1,7 +1,7 @@
 class Clinica:
-    def __init__(self, nome: str, localizacao: str, descricao: str):
+    def __init__(self, nome: str, cidade: str, descricao: str):
         self.__nome = nome
-        self.__localizacao = localizacao
+        self.__cidade = cidade
         self.__descricao = descricao
 
     @property
@@ -9,8 +9,8 @@ class Clinica:
         return self.__nome
 
     @property
-    def localizacao(self):
-        return self.__localizacao
+    def cidade(self):
+        return self.__cidade
 
     @property
     def descricao(self):
@@ -20,9 +20,9 @@ class Clinica:
     def nome(self, nome: str):
         self.__nome = nome
 
-    @localizacao.setter
-    def localizacao(self, localizacao: str):
-        self.__localizacao = localizacao
+    @cidade.setter
+    def cidade(self, cidade: str):
+        self.__cidade = cidade
 
     @descricao.setter
     def descricao(self, descricao: str):
