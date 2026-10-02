@@ -15,4 +15,8 @@ class PagamentoPix(Pagamento):
     @cpf_pagador.setter
     def cpf_pagador(self, cpf_pagador: str):
         self.__cpf_pagador = cpf_pagador
-        
+
+    def processar_pagamento(self):
+                if len(self.__cpf) != 11:
+                      return False
+                return True

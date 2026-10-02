@@ -24,3 +24,11 @@ class PagamentoCartao(Pagamento):
     @bandeira.setter
     def bandeira(self, bandeira: str):
         self.__bandeira = bandeira
+
+    def processar_pagamento(self):
+            if len(self.__numero_cartao) != 16:
+                 return False
+
+            if self.__bandeira not in ["Visa", "Mastercard", "Elo"]: #transformar tudo em minusculo no campo de digitação pra não ter erro por tamanho de letra
+                 return False
+            return True
