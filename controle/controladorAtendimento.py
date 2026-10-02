@@ -10,19 +10,26 @@
 #3. Os pagamentos devem ser realizados até a data do atendimento.
 
 from entidade.atendimento import Atendimento
-from controladorPaciente import ControladorPaciente
-from controladorAcompanhante import ControladorAcompanhante
 
 class ControladorAtendimento:
-    def __init__(self, controladorPaciente, controladorAcompanhante):
+    def __init__(self, controladorClinica, controladorPaciente, controladorProfissional, controladorAcompanhante):
         self.__atendimentos = []
+        self.__controladorClinica = controladorClinica
         self.__controladorPaciente = controladorPaciente
+        self.__controladorProfissional = controladorProfissional
         self.__controladorAcompanhante = controladorAcompanhante
 
 
     def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante = None):
+
+        if clinica not in self.__controladorClinica.clinicas:
+            return "Clínica não cadastrada!"
+
         if paciente not in self.__controladorPaciente.pacientes:
             return "Paciente não cadastrado!"
+
+        if profissional not in self.__controladorProfissional.profissionais:
+            return "Profissional não cadastrado!"
 
         if paciente.idade < 18:
             if acompanhante is None:

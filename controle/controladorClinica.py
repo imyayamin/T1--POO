@@ -5,7 +5,7 @@ class ControladorClinica:
         self.__clinicas = []
 
     @property
-    def clinica(self):
+    def clinicas(self):
         return self.__clinicas
 
     def cadastrar_clinica(self, nome, cidade, descricao, horario_funcionamento_inicial, horario_funcionamento_final):
