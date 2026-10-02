@@ -1,43 +1,32 @@
-#Após o agendamento, deve ser feito o controle dos pagamentos dos atendimentos. O sistema deve
-#permitir pagamentos parciais (parcelamento). O registro do pagamento deve conter: data,
-#atendimento, paciente, valor pago, e deve ser possível calcular o valor restante.
-from entidade.pagamentoPix import PagamentoPix
-from entidade.pagamentoCartao import PagamentoCartao
-from entidade.pagamentoDinheiro import PagamentoDinheiro
-
 class ControladorPagamento:
 
     def __init__(self):
         self.__pagamentos = []
 
-    def registrar_pagamento(self, atendimento, data_pagamento, valor_pago, tipo_pagamento):
+    def registrar_pagamento(self, pagamento):
 
-        if data_pagamento > atendimento.data:
+        atendimento = pagamento.atendimento
+
+        if pagamento.data_pagamento > atendimento.data:
             return "Pagamento deve ser realizado até a data do atendimento!"
 
-        if valor_pago <= 0:
+        if pagamento.valor_pago <= 0:
             return "O valor pago deve ser maior que zero!"
 
         valor_restante = self.calcular_valor_restante(atendimento)
 
-        if valor_pago > valor_restante:
+        if pagamento.valor_pago > valor_restante:
             return "Valor pago não pode ser maior que o valor restante!"
 
-        if tipo_pagamento == "pix":
-            pagamento = PagamentoPix(atendimento, data_pagamento, valor_pago)
-
-        elif tipo_pagamento == "cartao":
-            pagamento = PagamentoCartao(atendimento, data_pagamento, valor_pago)
-
-        elif tipo_pagamento == "dinheiro":
-            pagamento = PagamentoDinheiro(atendimento, data_pagamento, valor_pago)
-
-        else:
-            return "Tipo de pagamento inválido!"
+        if not pagamento.processar_pagamento():
+            return "Dados do pagamento inválidos!"
 
         self.__pagamentos.append(pagamento)
 
-        return pagamento.verificar_pagamento()
+        if valor_restante == 0:
+            return "Pagamento do atendimento concluído!"
+
+        return f"Pagamento registrado com sucesso! Valor restante: R$ {valor_restante:.2f}"
 
     def calcular_valor_restante(self, atendimento):
 

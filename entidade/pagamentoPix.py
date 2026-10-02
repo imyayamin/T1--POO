@@ -17,6 +17,7 @@ class PagamentoPix(Pagamento):
         self.__cpf_pagador = cpf_pagador
 
     def processar_pagamento(self):
-                if len(self.__cpf) != 11:
+                if len(self.__cpf_pagador) != 11:
                       return False
+                
                 return True

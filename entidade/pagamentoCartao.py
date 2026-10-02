@@ -4,7 +4,7 @@ from atendimento import Atendimento
 from paciente import Paciente
 
 class PagamentoCartao(Pagamento):
-    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float, numero_cartao: int, bandeira: str):
+    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float, numero_cartao: str, bandeira: str):
         super().__init__(data_pagamento, atendimento, paciente, valor_pago)
         self.__numero_cartao = numero_cartao
         self.__bandeira = bandeira
@@ -29,6 +29,7 @@ class PagamentoCartao(Pagamento):
             if len(self.__numero_cartao) != 16:
                  return False
 
-            if self.__bandeira not in ["Visa", "Mastercard", "Elo"]: #transformar tudo em minusculo no campo de digitação pra não ter erro por tamanho de letra
+            if self.__bandeira not in ["visa", "mastercard", "elo"]: 
                  return False
+            
             return True
