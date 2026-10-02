@@ -11,8 +11,7 @@ class ControladorProfissional:
     def cadastrar_profissional(self, nome, celular, cpf, especialidade, registro_profissional):
         for profissional in self.__profissionais:
             if profissional.cpf == cpf:
-                print("profissional já cadastrado!")
-                return
+                return "profissional já cadastrado!"
         
         novo_profissional = Profissional(nome, celular, cpf, especialidade, registro_profissional)
         self.__profissionais.append(novo_profissional)

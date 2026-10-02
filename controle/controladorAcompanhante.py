@@ -14,8 +14,7 @@ class ControladorAcompanhante:
         
         for acompanhante in self.__acompanhantes:
             if acompanhante.cpf == cpf:
-                print("Acompanhante já cadastrado!")
-                return
+                return "Acompanhante já cadastrado!"
             
         novo_acompanhante = acompanhante(nome, celular, cpf, idade)
         self.__acompanhantes.append(novo_acompanhante)

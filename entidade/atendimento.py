@@ -55,7 +55,7 @@ class Atendimento:
     def clinica(self, clinica: Clinica):
         self.__clinica = clinica
 
-    @paciente.settter
+    @paciente.setter
     def paciente(self, paciente: Paciente):
         self.__paciente = paciente
 
@@ -68,8 +68,8 @@ class Atendimento:
         self.__data = data
 
     @horario_inicio.setter
-    def horario_inicio(self, horario_incio: time):
-        self.__horario_inicio = self.horario_inicio
+    def horario_inicio(self, horario_inicio: time):
+        self.__horario_inicio = horario_inicio
 
     @horario_fim.setter
     def horario_fim(self, horario_fim: time):
