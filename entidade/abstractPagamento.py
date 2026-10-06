@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import date
+
 from atendimento import Atendimento
 from paciente import Paciente
 
 class Pagamento(ABC):
+
     def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float):
         self.__data_pagamento = data_pagamento
         self.__atendimento = atendimento
@@ -45,4 +47,3 @@ class Pagamento(ABC):
     @abstractmethod
     def processar_pagamento(self):
         pass
-    

@@ -1,11 +1,10 @@
 from abstractPagamento import Pagamento
-from datetime import date
-from atendimento import Atendimento
-from paciente import Paciente
 
 class PagamentoCartao(Pagamento):
-    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float, numero_cartao: str, bandeira: str, parcela: int):
+
+    def __init__(self, data_pagamento, atendimento, paciente, valor_pago, numero_cartao, bandeira, parcela):
         super().__init__(data_pagamento, atendimento, paciente, valor_pago)
+
         self.__numero_cartao = numero_cartao
         self.__bandeira = bandeira
         self.__parcela = parcela
@@ -23,7 +22,7 @@ class PagamentoCartao(Pagamento):
         return self.__parcela
 
     @numero_cartao.setter
-    def numero_cartao(self, numero_cartao: int):
+    def numero_cartao(self, numero_cartao: str):
         self.__numero_cartao = numero_cartao
 
     @bandeira.setter
@@ -35,10 +34,17 @@ class PagamentoCartao(Pagamento):
         self.__parcela = parcela
 
     def processar_pagamento(self):
-            if len(self.__numero_cartao) != 16:
-                 return False
 
-            if self.__bandeira not in ["visa", "mastercard", "elo"]: 
-                 return False
-            
-            return True
+        if not self.__numero_cartao.isdigit():
+            return False
+
+        if len(self.__numero_cartao) != 16:
+            return False
+
+        if self.__bandeira not in ["visa", "mastercard", "elo"]:
+            return False
+
+        if self.__parcela < 1 or self.__parcela > 3:
+            return False
+
+        return True

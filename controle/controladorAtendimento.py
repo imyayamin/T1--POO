@@ -1,26 +1,20 @@
-#O sistema deve permitir o agendamento de atendimentos (consultas) entre pacientes e profissionais.
-#Cada atendimento deve conter: clínica, paciente, profissional, data, horário (início e fim), tipo de
-#atendimento (consulta, exame, retorno, etc.) e valor.
-#Além disso, deve ser possível registrar procedimentos ou serviços realizados durante o atendimento.
-#Cada procedimento deve conter: descrição, custo, e profissional responsável.
-
-#Considere algumas regras:
-#1. Somente pacientes com mais de 18 anos completos podem realizar atendimentos de forma independente.
-#2. Os atendimentos devem ocorrer dentro do período de funcionamento da clínica.
-#3. Os pagamentos devem ser realizados até a data do atendimento.
-
 from entidade.atendimento import Atendimento
 
 class ControladorAtendimento:
+
     def __init__(self, controladorClinica, controladorPaciente, controladorProfissional, controladorAcompanhante):
         self.__atendimentos = []
+
         self.__controladorClinica = controladorClinica
         self.__controladorPaciente = controladorPaciente
         self.__controladorProfissional = controladorProfissional
         self.__controladorAcompanhante = controladorAcompanhante
 
+    @property
+    def atendimentos(self):
+        return self.__atendimentos
 
-    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante = None):
+    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, acompanhante=None):
 
         if clinica not in self.__controladorClinica.clinicas:
             return "Clínica não cadastrada!"
@@ -32,26 +26,52 @@ class ControladorAtendimento:
             return "Profissional não cadastrado!"
 
         if paciente.idade < 18:
+
             if acompanhante is None:
-                return "Paciente menor de idade precisa de acompanhante!"
+                return "Paciente menor de idade, precisa de acompanhante!"
 
             if acompanhante not in self.__controladorAcompanhante.acompanhantes:
                 return "Acompanhante não cadastrado!"
 
         if horario_inicio < clinica.horario_funcionamento_inicial:
-            return "Horário de inicio fora do funcionamento da clinica!"
+            return "Horário de início fora do funcionamento da clínica!"
 
         if horario_fim > clinica.horario_funcionamento_final:
-                    return "Horário de fim fora do funcionamento da clinica!"
+            return "Horário de fim fora do funcionamento da clínica!"
 
         if horario_inicio >= horario_fim:
             return "O horário de início deve ser anterior ao horário de fim!"
 
         for atendimento in self.__atendimentos:
-             if (atendimento.data == data and atendimento.profissional == profissional and horario_inicio < atendimento.horario_fim and horario_fim > atendimento.horario_inicio):
+
+            conflito = (
+                atendimento.data == data
+                and atendimento.profissional == profissional
+                and horario_inicio < atendimento.horario_fim
+                and horario_fim > atendimento.horario_inicio
+            )
+
+            if conflito:
                 return "Horário não disponível!"
 
-        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
-        self.__atendimentos.append(novoAtendimento)
-        
+        valor = self.__obter_valor_atendimento(tipoAtendimento)
+
+        if valor is None:
+            return "Tipo de atendimento inválido!"
+
+        novo_atendimento = Atendimento(clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
+
+        self.__atendimentos.append(novo_atendimento)
+
         return "Atendimento agendado com sucesso!"
+
+    def __obter_valor_atendimento(self, tipoAtendimento):
+
+        valores = {
+            "Consulta": 100,
+            "Exame": 150,
+            "Retorno": 70,
+            "Outro": 120
+        }
+
+        return valores.get(tipoAtendimento)

@@ -1,12 +1,13 @@
 from datetime import time
 
 class Clinica:
+
     def __init__(self, nome: str, cidade: str, descricao: str, horario_funcionamento_inicial: time, horario_funcionamento_final: time):
         self.__nome = nome
         self.__cidade = cidade
         self.__descricao = descricao
-        self.__horario_funcionamento_inicial = horario_funcionamento_inicial
-        self.__horario_funcionamento_final = horario_funcionamento_final
+        self.__horario_funcionamento_inicial = (horario_funcionamento_inicial)
+        self.__horario_funcionamento_final = (horario_funcionamento_final)
 
     @property
     def nome(self):
@@ -42,8 +43,8 @@ class Clinica:
 
     @horario_funcionamento_inicial.setter
     def horario_funcionamento_inicial(self, horario_funcionamento_inicial: time):
-        self.__horario_funcionamento_inicial = horario_funcionamento_inicial
+        self.__horario_funcionamento_inicial = (horario_funcionamento_inicial)
 
     @horario_funcionamento_final.setter
     def horario_funcionamento_final(self, horario_funcionamento_final: time):
-        self.__horario_funcionamento_final = horario_funcionamento_final
+        self.__horario_funcionamento_final = (horario_funcionamento_final)

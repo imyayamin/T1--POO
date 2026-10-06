@@ -5,24 +5,16 @@ from controladorAcompanhante import ControladorAcompanhante
 from controladorAtendimento import ControladorAtendimento
 from controladorPagamento import ControladorPagamento
 
-
 class ControladorGeral:
 
     def __init__(self):
 
-        self.__controladorPaciente = ControladorPaciente()
-        self.__controladorProfissional = ControladorProfissional()
-        self.__controladorClinica = ControladorClinica()
-        self.__controladorAcompanhante = ControladorAcompanhante()
-
-        self.__controladorAtendimento = ControladorAtendimento(
-            self.__controladorPaciente,
-            self.__controladorAcompanhante
-        )
-
-        self.__controladorPagamento = ControladorPagamento(
-            self.__controladorAtendimento
-        )
+        self.__controladorPaciente = (ControladorPaciente())
+        self.__controladorProfissional = (ControladorProfissional())
+        self.__controladorClinica = (ControladorClinica())
+        self.__controladorAcompanhante = (ControladorAcompanhante())
+        self.__controladorAtendimento = (ControladorAtendimento(self.__controladorClinica, self.__controladorPaciente, self.__controladorProfissional, self.__controladorAcompanhante))
+        self.__controladorPagamento = (ControladorPagamento())
 
     @property
     def controladorPaciente(self):

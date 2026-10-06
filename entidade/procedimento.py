@@ -1,7 +1,7 @@
-from atendimento import Atendimento
 from profissional import Profissional
 
 class Procedimento:
+
     def __init__(self, descricao: str, custo: float, profissional: Profissional):
         self.__descricao = descricao
         self.__custo = custo
@@ -20,7 +20,7 @@ class Procedimento:
         return self.__profissional
 
     @descricao.setter
-    def descricao(self, descricao:  str):
+    def descricao(self, descricao: str):
         self.__descricao = descricao
 
     @custo.setter

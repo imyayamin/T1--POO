@@ -4,7 +4,8 @@ from clinica import Clinica
 from datetime import date, time
 
 class Atendimento:
-    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: Profissional, data: date, horario_inicio: time, horario_fim: time, tipoAtendimento: str, valor: float, acompanhante=None):
+
+    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: Profissional, data: date, horario_inicio: time, horario_fim: time, tipoAtendimento: str,valor: float,acompanhante=None):
         self.__clinica = clinica
         self.__paciente = paciente
         self.__profissional = profissional
@@ -14,6 +15,9 @@ class Atendimento:
         self.__tipoAtendimento = tipoAtendimento
         self.__valor = valor
         self.__acompanhante = acompanhante
+
+        self.__pagamentos = []
+        self.__procedimentos = []
 
     @property
     def clinica(self):
@@ -51,6 +55,14 @@ class Atendimento:
     def acompanhante(self):
         return self.__acompanhante
 
+    @property
+    def pagamentos(self):
+        return self.__pagamentos
+
+    @property
+    def procedimentos(self):
+        return self.__procedimentos
+
     @clinica.setter
     def clinica(self, clinica: Clinica):
         self.__clinica = clinica
@@ -83,3 +95,62 @@ class Atendimento:
     def valor(self, valor: float):
         self.__valor = valor
 
+    def adicionar_procedimento(self, procedimento):
+
+        if procedimento is None:
+            return "Procedimento inválido!"
+
+        self.__procedimentos.append(procedimento)
+
+        return "Procedimento adicionado com sucesso!"
+
+    def valor_total_procedimentos(self):
+
+        return sum(
+            procedimento.custo
+            for procedimento in self.__procedimentos
+        )
+
+    def valor_total(self):
+
+        return self.__valor + self.valor_total_procedimentos()
+
+    def calcular_valor_restante(self):
+
+        total_pago = sum(
+            pagamento.valor_pago
+            for pagamento in self.__pagamentos
+        )
+
+        return self.valor_total() - total_pago
+
+    def registrar_pagamento(self, pagamento):
+
+        if pagamento.atendimento != self:
+            return "Pagamento não pertence a este atendimento!"
+
+        if pagamento.data_pagamento > self.__data:
+            return "Pagamento deve ser realizado até a data do atendimento!"
+
+        if pagamento.valor_pago <= 0:
+            return "O valor pago deve ser maior que zero!"
+
+        valor_restante = self.calcular_valor_restante()
+
+        if valor_restante <= 0:
+            return "O atendimento já foi totalmente pago."
+
+        if pagamento.valor_pago > valor_restante:
+            return "Valor pago não pode ser maior que o valor restante!"
+        
+        if not pagamento.processar_pagamento():
+            return "Dados do pagamento inválidos!"
+
+        self.__pagamentos.append(pagamento)
+
+        novo_valor_restante = self.calcular_valor_restante()
+
+        if novo_valor_restante == 0:
+            return "Pagamento do atendimento concluído!"
+
+        return "Pagamento registrado com sucesso! " f"\nValor restante: R$ {novo_valor_restante:.2f}"

@@ -1,13 +1,13 @@
 from abc import ABC
 from abstractPessoa import AbstractPessoa
 
-
 class Pessoa(AbstractPessoa, ABC):
-    def __init__(self, nome:str, celular: str, cpf: str):
+
+    def __init__(self, nome: str, celular: str, cpf: str):
         self.__nome = nome
         self.__celular = celular
         self.__cpf = cpf
-        
+
     @property
     def nome(self):
         return self.__nome

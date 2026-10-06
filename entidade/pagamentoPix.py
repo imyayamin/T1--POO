@@ -1,11 +1,11 @@
 from abstractPagamento import Pagamento
-from datetime import date
-from atendimento import Atendimento
-from paciente import Paciente
+
 
 class PagamentoPix(Pagamento):
-    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float, cpf_pagador: str):
+
+    def __init__(self, data_pagamento, atendimento, paciente, valor_pago, cpf_pagador):
         super().__init__(data_pagamento, atendimento, paciente, valor_pago)
+
         self.__cpf_pagador = cpf_pagador
 
     @property
@@ -17,7 +17,11 @@ class PagamentoPix(Pagamento):
         self.__cpf_pagador = cpf_pagador
 
     def processar_pagamento(self):
-                if len(self.__cpf_pagador) != 11:
-                      return False
-                
-                return True
+
+        if not self.__cpf_pagador.isdigit():
+            return False
+
+        if len(self.__cpf_pagador) != 11:
+            return False
+
+        return True
