@@ -1,48 +1,64 @@
-from entidade.pagamentoCartao import PagamentoCartao
-from entidade.pagamentoDinheiro import PagamentoDinheiro
-from entidade.pagamentoPix import PagamentoPix
-
-
 class TelaPagamento:
 
-    def escolher_tipo(self, data_pagamento, atendimento, paciente, valor_pago):
+    def realizar_pagamento(self, controlador_pagamento, data_pagamento, atendimento, paciente):
 
+        mensagem = controlador_pagamento.realizar_pagamento(data_pagamento, atendimento, paciente)
+
+        self.mostrar_mensagem(mensagem)
+
+    def escolher_tipo(self):
+        print("\nFORMA DE PAGAMENTO")
         print("1 - Dinheiro")
         print("2 - PIX")
         print("3 - Cartão de crédito")
 
-        resposta = input("Digite a opção: ").strip()
+        return input("Digite a opção: ").strip()
 
-        match resposta:
+    def informar_valor(self):
+        while True:
+            try:
+                valor = float(input("Digite o valor a pagar: R$ "))
 
-            case "1":
-                pagamento = PagamentoDinheiro(data_pagamento, atendimento, paciente, valor_pago)
+                if valor <= 0:
+                    print("O valor deve ser maior que zero.")
+                    continue
 
-            case "2":
-                cpf_pagador = input("Digite o CPF do pagador: ").strip()
+                return valor
 
-                pagamento = PagamentoPix(data_pagamento, atendimento, paciente, valor_pago, cpf_pagador)
+            except ValueError:
+                print("Digite um valor válido.")
 
-            case "3": #adicionar a possibilidade de parcelas
-                numero_cartao = input("Digite o número do cartão: ").strip()
-                bandeira = input("Digite a bandeira do cartão: ").strip().lower()
+    def informar_cpf(self):
+        return input("Digite o CPF do pagador: ").strip()
 
-                print("\nParcelas disponíveis:")
+    def informar_cartao(self):
+        return input("Digite o número do cartão: ").strip()
 
-                for i in range(1, 4):#parcela em até 3x só
-                    valor_parcela = atendimento.valor / i
-                    print(f"{i}x - R$ {valor_parcela:.2f}")
+    def informar_bandeira(self):
+        return input("Digite a bandeira do cartão: ").strip().lower()
 
-                parcela = int(input("Em quantas vezes gostaria de pagar?"))
-                if parcela == 0 or parcela > 3: #isso pode virar um exception
-                    return "Quantidade de parcelas inválidas."
-                else:
-                    valor_parcela = atendimento.valor/parcela #vai ter que usar isso em algum lugar do controle
-                    print(f"Seu pagamento no valor de R${atendimento.valor} será pago em {parcela} vezes de R${valor_parcela}")
-                            
-                pagamento = PagamentoCartao(data_pagamento, atendimento, paciente, valor_pago, numero_cartao, bandeira)
+    def informar_parcelas(self, valor):
+        print("\nPARCELAMENTO")
 
-            case _:
-                return "Opção inválida!" #adicionar exception
+        for i in range(1, 4):
+            valor_parcela = valor / i
+            print(f"{i}x - R$ {valor_parcela:.2f}")
 
-        return pagamento
+        while True:
+            try:
+                parcelas = int(input("Em quantas vezes deseja pagar? "))
+
+                if parcelas < 1 or parcelas > 3:
+                    print(
+                        "Quantidade de parcelas inválida. "
+                        "Escolha entre 1 e 3."
+                    )
+                    continue
+
+                return parcelas
+
+            except ValueError:
+                print("Digite um número válido.")
+
+    def mostrar_mensagem(self, mensagem):
+        print(mensagem)

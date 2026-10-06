@@ -4,10 +4,11 @@ from atendimento import Atendimento
 from paciente import Paciente
 
 class PagamentoCartao(Pagamento):
-    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float, numero_cartao: str, bandeira: str):
+    def __init__(self, data_pagamento: date, atendimento: Atendimento, paciente: Paciente, valor_pago: float, numero_cartao: str, bandeira: str, parcela: int):
         super().__init__(data_pagamento, atendimento, paciente, valor_pago)
         self.__numero_cartao = numero_cartao
         self.__bandeira = bandeira
+        self.__parcela = parcela
 
     @property
     def numero_cartao(self):
@@ -17,6 +18,10 @@ class PagamentoCartao(Pagamento):
     def bandeira(self):
         return self.__bandeira
 
+    @property
+    def parcela(self):
+        return self.__parcela
+
     @numero_cartao.setter
     def numero_cartao(self, numero_cartao: int):
         self.__numero_cartao = numero_cartao
@@ -24,6 +29,10 @@ class PagamentoCartao(Pagamento):
     @bandeira.setter
     def bandeira(self, bandeira: str):
         self.__bandeira = bandeira
+
+    @parcela.setter
+    def parcela(self, parcela: int):
+        self.__parcela = parcela
 
     def processar_pagamento(self):
             if len(self.__numero_cartao) != 16:
