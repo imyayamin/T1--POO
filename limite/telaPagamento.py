@@ -23,10 +23,23 @@ class TelaPagamento:
 
                 pagamento = PagamentoPix(data_pagamento, atendimento, paciente, valor_pago, cpf_pagador)
 
-            case "3":
+            case "3": #adicionar a possibilidade de parcelas
                 numero_cartao = input("Digite o número do cartão: ").strip()
                 bandeira = input("Digite a bandeira do cartão: ").strip().lower()
 
+                print("\nParcelas disponíveis:")
+
+                for i in range(1, 4):#parcela em até 3x só
+                    valor_parcela = atendimento.valor / i
+                    print(f"{i}x - R$ {valor_parcela:.2f}")
+
+                parcela = int(input("Em quantas vezes gostaria de pagar?"))
+                if parcela == 0 or parcela > 3: #isso pode virar um exception
+                    return "Quantidade de parcelas inválidas."
+                else:
+                    valor_parcela = atendimento.valor/parcela #vai ter que usar isso em algum lugar do controle
+                    print(f"Seu pagamento no valor de R${atendimento.valor} será pago em {parcela} vezes de R${valor_parcela}")
+                            
                 pagamento = PagamentoCartao(data_pagamento, atendimento, paciente, valor_pago, numero_cartao, bandeira)
 
             case _:
