@@ -104,20 +104,26 @@ class TelaAtendimento:
         match opcao:
             case "1":
                 tipoAtendimento = "Consulta"
+                valor = 100
+                print(f"Valor do atendimento é: {valor}")
 
             case "2":
                 tipoAtendimento = "Exame"
+                valor = 150
+                print(f"Valor do atendimento é: {valor}")
 
             case "3":
                 tipoAtendimento = "Retorno"
+                valor = 70
+                print(f"Valor do atendimento é: {valor}")
 
             case "4":
                 tipoAtendimento = input("Digite o tipo de atendimento: ").strip()
+                valor = 120
+                print(f"Valor do atendimento é: {valor}")
 
             case _:
                 return "Tipo de atendimento inválido!"
-
-        valor = float(input("Digite o valor do atendimento: "))#isso me parece errado acho que deviamos fazer uma tabela de preços
 
         acompanhante = None
 
