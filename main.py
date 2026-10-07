@@ -1,4 +1,5 @@
 from controle.controladorGeral import ControladorGeral
 
 
-controladorGeral = ControladorGeral()
+if __name__ == "__main__":
+    ControladorGeral().inicializa_sistema()

@@ -1,4 +1,5 @@
 from entidade.paciente import Paciente
+from exceptions.exceptions import PacienteRepetidoException
 
 class ControladorPaciente:
 
@@ -14,7 +15,7 @@ class ControladorPaciente:
         for paciente in self.__pacientes:
 
             if paciente.cpf == cpf:
-                return "Paciente já cadastrado!"
+                raise PacienteRepetidoException(novo_paciente.cpf)
 
         novo_paciente = Paciente(nome, celular, cpf, idade)
 
