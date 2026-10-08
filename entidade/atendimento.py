@@ -5,16 +5,24 @@ from datetime import date, time
 
 class Atendimento:
 
-    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: Profissional, data: date, horario_inicio: time, horario_fim: time, tipoAtendimento: str,valor: float,acompanhante=None):
-        self.__clinica = clinica
-        self.__paciente = paciente
-        self.__profissional = profissional
-        self.__data = data
-        self.__horario_inicio = horario_inicio
-        self.__horario_fim = horario_fim
-        self.__tipoAtendimento = tipoAtendimento
-        self.__valor = valor
-        self.__acompanhante = acompanhante
+    def __init__(self, clinica: Clinica, paciente: Paciente, profissional: Profissional, data: date, horario_inicio: time, horario_fim: time, tipoAtendimento: str,valor: float):
+        if isinstance(clinica, Clinica):
+            self.__clinica = clinica
+        if isinstance(paciente, Paciente):
+            self.__paciente = paciente
+        if isinstance(profissional, Profissional):
+            self.__profissional = profissional
+        if isinstance(data, date):
+            self.__data = data
+        if isinstance(horario_inicio, time):
+            self.__horario_inicio = horario_inicio
+        if isinstance(horario_fim, time):
+            self.__horario_fim = horario_fim
+        if isinstance(tipoAtendimento, str):
+            self.__tipoAtendimento = tipoAtendimento
+        if isinstance(valor, float):
+            self.__valor = valor
+        self.__acompanhante = self.__paciente.acompanhante #tenho que verificar isso depois
 
         self.__pagamentos = []
         self.__procedimentos = []
