@@ -12,19 +12,16 @@ from limite.telaGeral import TelaGeral
 class ControladorGeral:
 
     def __init__(self):
-        self.__controladorAcompanhante = ControladorPaciente(self)
+        self.__controladorPaciente = ControladorPaciente(self)
         self.__controladorProfissional = ControladorProfissional(self)
         self.__controladorClinica = ControladorClinica(self)
-        self.__controladorAcompanhante = ControladorAcompanhante(self)
-
         self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorAcompanhante, self.__controladorProfissional, self.__controladorAcompanhante)
         self.__controladorPagamento = ControladorPagamento(self)
-        self.__controladorProcedimento = ControladorProcedimento(self, self.__controladorAtendimento, self.__controladorProfissional)
         self.__telaGeral = TelaGeral()
 
     @property
     def controlador_paciente(self):
-        return self.__controladorAcompanhante
+        return self.__controladorPaciente
 
     @property
     def controlador_profissional(self):

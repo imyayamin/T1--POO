@@ -21,3 +21,9 @@ class ControladorProfissional:
         self.__profissionais.append(novo_profissional)
 
         return "Profissional cadastrado com sucesso!"
+
+    def listar_profissionais(self):
+
+    def editar_profissional(self):
+
+    def remover_profissional(self):
