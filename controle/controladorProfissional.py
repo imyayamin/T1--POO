@@ -1,7 +1,6 @@
 from entidade.profissional import Profissional
 
 class ControladorProfissional:
-
     def __init__(self):
         self.__profissionais = []
 
@@ -23,7 +22,12 @@ class ControladorProfissional:
         return "Profissional cadastrado com sucesso!"
 
     def listar_profissionais(self):
+        lista_profissionais = []
+        for profissional in self.__profissionais:
+            lista_profissionais.append(profissional)
+        return lista_profissionais
 
     def editar_profissional(self):
+
 
     def remover_profissional(self):

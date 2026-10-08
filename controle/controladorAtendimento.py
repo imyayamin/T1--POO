@@ -1,14 +1,21 @@
 from entidade.atendimento import Atendimento
+from controladorAtendimento import ControladorClinica
+from controladorPaciente import ControladorPaciente
+from controladorProfissional import ControladorProfissional
+from controladorAcompanhante import ControladorAcompanhante
 
 class ControladorAtendimento:
 
-    def __init__(self, controladorClinica, controladorPaciente, controladorProfissional, controladorAcompanhante):
+    def __init__(self, controladorClinica: ControladorClinica, controladorPaciente: ControladorPaciente, controladorProfissional: ControladorProfissional, controladorAcompanhante: ControladorProfissional):
         self.__atendimentos = []
-
-        self.__controladorClinica = controladorClinica
-        self.__controladorPaciente = controladorPaciente
-        self.__controladorProfissional = controladorProfissional
-        self.__controladorAcompanhante = controladorAcompanhante
+        if isinstance(controladorClinica, ControladorClinica):
+            self.__controladorClinica = controladorClinica
+        if isinstance(controladorPaciente, ControladorPaciente):
+            self.__controladorPaciente = controladorPaciente
+        if isinstance(controladorProfissional, ControladorProfissional):
+            self.__controladorProfissional = controladorProfissional
+        if isinstance(controladorAcompanhante, ControladorAcompanhante):
+            self.__controladorAcompanhante = controladorAcompanhante
 
     @property
     def atendimentos(self):
