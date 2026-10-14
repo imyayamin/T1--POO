@@ -11,3 +11,15 @@ class TelaPaciente:
                 return int(input("Escolha uma opção: "))
             except ValueError:
                 return "Opção invalída"
+
+    def lista_pacientes(self):
+        pacientes = self.__controladorPaciente.pacientes
+        
+        if not pacientes:
+            print("Nenhum paciente cadastrado.")
+            return None
+        
+        print("\nPacientes cadastrados:")
+        
+        for i, paciente in enumerate(pacientes, start=1):
+            print(f"{i} - {paciente.nome}")

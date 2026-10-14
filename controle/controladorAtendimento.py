@@ -2,7 +2,6 @@ from entidade.atendimento import Atendimento
 from controladorAtendimento import ControladorClinica
 from controladorPaciente import ControladorPaciente
 from controladorProfissional import ControladorProfissional
-from controladorAcompanhante import ControladorAcompanhante
 
 class ControladorAtendimento:
 
@@ -14,8 +13,6 @@ class ControladorAtendimento:
             self.__controladorPaciente = controladorPaciente
         if isinstance(controladorProfissional, ControladorProfissional):
             self.__controladorProfissional = controladorProfissional
-        if isinstance(controladorAcompanhante, ControladorAcompanhante):
-            self.__controladorAcompanhante = controladorAcompanhante
 
     @property
     def atendimentos(self):
@@ -33,12 +30,7 @@ class ControladorAtendimento:
             return "Profissional não cadastrado!"
 
         if paciente.idade < 18:
-
-            if acompanhante is None:
-                return "Paciente menor de idade, precisa de acompanhante!"
-
-            if acompanhante not in self.__controladorAcompanhante.acompanhantes:
-                return "Acompanhante não cadastrado!"
+            return None
 
         if horario_inicio < clinica.horario_funcionamento_inicial:
             return "Horário de início fora do funcionamento da clínica!"
