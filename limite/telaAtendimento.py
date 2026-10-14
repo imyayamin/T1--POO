@@ -1,7 +1,6 @@
 from datetime import date, time
 
 class TelaAtendimento:
-
     def __init__(self, controladorAtendimento, controladorClinica, controladorPaciente, controladorProfissional, controladorAcompanhante):
         self.__controladorAtendimento = (controladorAtendimento)
         self.__controladorClinica = (controladorClinica)

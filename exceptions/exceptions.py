@@ -109,3 +109,11 @@ class ValorProcedimentoInvalidoException(Exception):
     def __init__(self, valor):
         self.mensagem = "O valor do procedimento R$ {:.2f} deve ser maior que zero"
         super().__init__(self.mensagem.format(valor))
+
+class EntradaInvalidaException(Exception):
+    def __init__(self, campo: str = "valor"):
+        super().__init__(f"Entrada inválida para '{campo}'. Digite um número inteiro.")
+
+class AcompanhanteObrigatorioException(Exception):
+    def __init__(self):
+        super().__init__("Paciente menor de 18 anos precisa de acompanhante obrigatório.")

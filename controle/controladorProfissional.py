@@ -106,8 +106,7 @@ class ControladorProfissional:
             0: self.retornar,
         }
 
-        continua = True
-        while continua:
+        while True:
             opcao = self.__tela_profissional.tela_opcoes()
             funcao = lista_opcoes.get(opcao)
             if funcao is None:
