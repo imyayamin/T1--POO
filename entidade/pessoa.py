@@ -1,5 +1,5 @@
 from abc import ABC
-from abstractPessoa import AbstractPessoa
+from entidade.abstractPessoa import AbstractPessoa
 
 class Pessoa(AbstractPessoa, ABC):
 

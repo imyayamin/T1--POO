@@ -4,7 +4,6 @@ from controladorPaciente import ControladorPaciente
 from controladorProfissional import ControladorProfissional
 
 class ControladorAtendimento:
-
     def __init__(self, controladorClinica: ControladorClinica, controladorPaciente: ControladorPaciente, controladorProfissional: ControladorProfissional, controladorAcompanhante: ControladorProfissional):
         self.__atendimentos = []
         if isinstance(controladorClinica, ControladorClinica):
@@ -23,26 +22,19 @@ class ControladorAtendimento:
         if clinica not in self.__controladorClinica.clinicas:
             return "Clínica não cadastrada!"
 
-        if paciente not in self.__controladorPaciente.pacientes:
-            return "Paciente não cadastrado!"
-
-        if profissional not in self.__controladorProfissional.profissionais:
-            return "Profissional não cadastrado!"
-
         if paciente.idade < 18:
             return None
 
         if horario_inicio < clinica.horario_funcionamento_inicial:
-            return "Horário de início fora do funcionamento da clínica!"
+            return "Horário de inicio fora do funcionamento da clinica!"
 
         if horario_fim > clinica.horario_funcionamento_final:
-            return "Horário de fim fora do funcionamento da clínica!"
+            return "Horário de fim fora do funcionamento da clinica!"
 
         if horario_inicio >= horario_fim:
             return "O horário de início deve ser anterior ao horário de fim!"
 
         for atendimento in self.__atendimentos:
-
             conflito = (
                 atendimento.data == data
                 and atendimento.profissional == profissional
@@ -53,6 +45,9 @@ class ControladorAtendimento:
             if conflito:
                 return "Horário não disponível!"
 
+        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
+        self.__atendimentos.append(novoAtendimento)
+        
         valor = self.__obter_valor_atendimento(tipoAtendimento)
 
         if valor is None:

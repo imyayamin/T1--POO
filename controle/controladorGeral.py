@@ -1,13 +1,10 @@
 from controle.controladorPaciente import ControladorPaciente
 from controle.controladorProfissional import ControladorProfissional
 from controle.controladorClinica import ControladorClinica
-from controle.controladorAcompanhante import ControladorAcompanhante
 from controle.controladorAtendimento import ControladorAtendimento
 from controle.controladorPagamento import ControladorPagamento
 from controle.controladorProcedimento import ControladorProcedimento
-
 from limite.telaGeral import TelaGeral
-
 
 class ControladorGeral:
 
@@ -49,16 +46,13 @@ class ControladorGeral:
         self.abre_tela()
 
     def cadastra_paciente(self):
-        self.__controladorAcompanhante.abre_tela()
+        self.__controladorPaciente.abre_tela()
 
     def cadastra_profissional(self):
         self.__controladorProfissional.abre_tela()
 
     def cadastra_clinica(self):
         self.__controladorClinica.abre_tela()
-
-    def cadastra_acompanhante(self):
-        self.__controladorAcompanhante.abre_tela()
 
     def cadastra_atendimento(self):
         self.__controladorAtendimento.abre_tela()

@@ -5,9 +5,8 @@ class PacienteRepetidoException(Exception):
 
 
 class ProfissionalRepetidoException(Exception):
-    def __init__(self, cpf):
-        self.mensagem = "O profissional com CPF {} já existe"
-        super().__init__(self.mensagem.format(cpf))
+    def __init__(self, cpf: int):
+        super().__init__(f"Já existe um profissional cadastrado com o CPF {cpf}.")
 
 
 class AcompanhanteRepetidoException(Exception):

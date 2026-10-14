@@ -1,12 +1,12 @@
-from pessoa import Pessoa
+from entidade.pessoa import Pessoa
 
 class Paciente(Pessoa):
 
-    def __init__(self, nome: str, celular: str, cpf: str, idade: int):
+    def __init__(self, nome: str, celular: str, cpf: str, idade: int, acompanhante=None):
         super().__init__(nome, celular, cpf)
         self.__idade = idade
-        self.__acompanhante = None
-
+        self.__acompanhante = acompanhante
+        
     @property
     def idade(self):
         return self.__idade
