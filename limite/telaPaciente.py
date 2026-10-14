@@ -3,8 +3,7 @@ class TelaPaciente:
             print("\n========== PACIENTES ==========")
             print("1 - Listar paciente")
             print("2 - Cadastrar paciente")
-            print("3 - Cadastrar acompanhante")
-            print("4 - Remover paciente")
+            print("3 - Remover paciente")
             print("0 - Sair")
             print("==============================")
     

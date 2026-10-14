@@ -12,10 +12,9 @@ from limite.telaGeral import TelaGeral
 class ControladorGeral:
 
     def __init__(self):
-        self.__controladorAcompanhante = ControladorPaciente(self)
+        self.__controladorPaciente = ControladorPaciente(self)
         self.__controladorProfissional = ControladorProfissional(self)
         self.__controladorClinica = ControladorClinica(self)
-        self.__controladorAcompanhante = ControladorAcompanhante(self)
 
         self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorAcompanhante, self.__controladorProfissional, self.__controladorAcompanhante)
         self.__controladorPagamento = ControladorPagamento(self)
@@ -24,7 +23,7 @@ class ControladorGeral:
 
     @property
     def controlador_paciente(self):
-        return self.__controladorAcompanhante
+        return self.__controladorPaciente
 
     @property
     def controlador_profissional(self):
@@ -33,10 +32,6 @@ class ControladorGeral:
     @property
     def controlador_clinica(self):
         return self.__controladorClinica
-
-    @property
-    def controlador_acompanhante(self):
-        return self.__controladorAcompanhante
 
     @property
     def controlador_atendimento(self):
@@ -82,10 +77,9 @@ class ControladorGeral:
             1: self.cadastra_paciente,
             2: self.cadastra_profissional,
             3: self.cadastra_clinica,
-            4: self.cadastra_acompanhante,
-            5: self.cadastra_atendimento,
-            6: self.cadastra_pagamento,
-            7: self.cadastra_procedimento,
+            4: self.cadastra_atendimento,
+            5: self.cadastra_pagamento,
+            6: self.cadastra_procedimento,
             0: self.encerra_sistema
         }
 
