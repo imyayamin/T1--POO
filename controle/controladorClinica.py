@@ -25,3 +25,5 @@ class ControladorClinica:
         self.__clinicas.append(nova_clinica)
 
         return "Clínica cadastrada com sucesso!"
+
+    

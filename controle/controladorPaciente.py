@@ -42,9 +42,7 @@ class ControladorPaciente:
 
         acompanhante = None
         if 0 <= dados["idade"] < 18:
-            self.__tela_paciente.mostra_mensagem(
-                "Paciente menor de idade. Informe o acompanhante:"
-            )
+            self.__tela_paciente.mostra_mensagem("Paciente menor de idade. Informe o acompanhante:")
             acompanhante = self.__tela_paciente.pega_acompanhante()
 
         try:
@@ -60,6 +58,10 @@ class ControladorPaciente:
             self.__tela_paciente.mostra_mensagem(str(e))
 
     def listar_pacientes(self):
+        try:
+            if not self.__pacientes:
+                raise ListaVaziaException("pacientes")
+
         self.__tela_paciente.lista_pacientes(self.__pacientes)
         return self.__pacientes
 

@@ -8,13 +8,6 @@ class ProfissionalRepetidoException(Exception):
     def __init__(self, cpf: int):
         super().__init__(f"Já existe um profissional cadastrado com o CPF {cpf}.")
 
-
-class AcompanhanteRepetidoException(Exception):
-    def __init__(self, cpf):
-        self.mensagem = "O acompanhante com CPF {} já existe"
-        super().__init__(self.mensagem.format(cpf))
-
-
 class ClinicaRepetidaException(Exception):
     def __init__(self, nome):
         self.mensagem = "A clínica {} já existe"
@@ -114,6 +107,6 @@ class EntradaInvalidaException(Exception):
     def __init__(self, campo: str = "valor"):
         super().__init__(f"Entrada inválida para '{campo}'. Digite um número inteiro.")
 
-class AcompanhanteObrigatorioException(Exception):
-    def __init__(self):
-        super().__init__("Paciente menor de 18 anos precisa de acompanhante obrigatório.")
+class ListaVaziaException(Exception):
+    def __init__(self, entidade: str):
+        super().__init__(f"Não há {entidade} cadastrados(as) para listar.")

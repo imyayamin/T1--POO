@@ -1,4 +1,6 @@
 class TelaProfissional:
+
+
     def tela_opcoes(self):
         print("\n========== PROFISSIONAIS ==========")
         print("1 - Listar profissionais")

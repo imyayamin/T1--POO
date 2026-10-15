@@ -1,6 +1,6 @@
 from limite.telaProfissional import TelaProfissional
 from entidade.profissional import Profissional
-from exceptions.exceptions import ProfissionalRepetidoException
+from exceptions.exceptions import (ProfissionalRepetidoException, ProfissionalNaoEncontradoException, ListaVaziaException)
 
 
 class ControladorProfissional:
@@ -22,63 +22,57 @@ class ControladorProfissional:
 
     def incluir_profissional(self):
         dados_profissional = self.__tela_profissional.pega_dados_profissional()
-        cpf = dados_profissional["cpf"]
-        profissional = self.pega_profissional_por_cpf(cpf)
+        p = self.pega_profissional_por_cpf(dados_profissional["cpf"])
+
         try:
-            if profissional is None:
+            if p is None:
                 profissional = Profissional(
-                    dados_profissional["nome"],
-                    dados_profissional["celular"],
-                    dados_profissional["cpf"],
-                    dados_profissional["especialidade"],
-                    dados_profissional["registro_profissional"],
+                dados_profissional["nome"],
+                dados_profissional["celular"],
+                dados_profissional["cpf"],
+                dados_profissional["especialidade"],
+                dados_profissional["registro_profissional"]
                 )
                 self.__profissionais.append(profissional)
-                self.__tela_profissional.mostra_mensagem("Profissional cadastrado com sucesso!")
             else:
-                raise ProfissionalRepetidoException(cpf)
+                raise ProfissionalRepetidoException(dados_profissional["cpf"])
         except ProfissionalRepetidoException as e:
             self.__tela_profissional.mostra_mensagem(e)
+
 
     def alterar_profissional(self):
         self.lista_profissionais()
         cpf_profissional = self.__tela_profissional.seleciona_profissional()
-        if cpf_profissional is None:
-            return
         profissional = self.pega_profissional_por_cpf(cpf_profissional)
 
-        if profissional is not None:
-            novos_dados_profissional = self.__tela_profissional.pega_dados_profissional()
+        try:
+            if(profissional is not None):
+                novos_dados_profissional = self.__tela_profissional.pega_dados_profissional()
+                profissional.nome = novos_dados_profissional["nome"]
+                profissional.celular = novos_dados_profissional["celular"]
+                profissional.cpf = novos_dados_profissional["cpf"]
+                profissional.especialidade = novos_dados_profissional["especialidade"]
+                profissional.registro_profissional = novos_dados_profissional["registro_profissional"]
+                self.profissionais()
+        except ProfissionalNaoEncontradoException as e:
+            self.__tela_profissional.mostra_mensagem(e)
 
-            # Verifica se o novo CPF já pertence a outro profissional
-            outro = self.pega_profissional_por_cpf(novos_dados_profissional["cpf"])
-            if outro is not None and outro is not profissional:
-                self.__tela_profissional.mostra_mensagem(
-                    "ATENÇÃO: Já existe outro profissional com esse CPF."
-                )
-                return
+    def listar_profissionais(self):
+        try:
+            if not self.__profissionais:
+                raise ListaVaziaException("profissionais")
 
-            profissional.nome = novos_dados_profissional["nome"]
-            profissional.celular = novos_dados_profissional["celular"]
-            profissional.cpf = novos_dados_profissional["cpf"]
-            profissional.especialidade = novos_dados_profissional["especialidade"]
-            profissional.registro_profissional = novos_dados_profissional["registro_profissional"]
-            self.lista_profissionais()
-        else:
-            self.__tela_profissional.mostra_mensagem("ATENÇÃO: Profissional não existente")
+            for profissional in self.__profissionais:
+                self.__tela_profissional.mostra_profissional({
+                    "nome": profissional.nome,
+                    "celular": profissional.celular,
+                    "cpf": profissional.cpf,
+                    "especialidade": profissional.especialidade,
+                    "registro_profissional": profissional.registro_profissional,
+                })
 
-    def lista_profissionais(self):
-        if not self.__profissionais:
-            self.__tela_profissional.mostra_mensagem("Nenhum profissional cadastrado.")
-            return
-        for profissional in self.__profissionais:
-            self.__tela_profissional.mostra_profissional({
-                "nome": profissional.nome,
-                "celular": profissional.celular,
-                "cpf": profissional.cpf,
-                "especialidade": profissional.especialidade,
-                "registro_profissional": profissional.registro_profissional,
-            })
+        except ListaVaziaException as e:
+            self.__tela_profissional.mostra_mensagem(e)
 
     def excluir_profissional(self):
         self.lista_profissionais()
@@ -86,13 +80,13 @@ class ControladorProfissional:
         if cpf_profissional is None:
             return
         profissional = self.pega_profissional_por_cpf(cpf_profissional)
-
-        if profissional is not None:
-            self.__profissionais.remove(profissional)
-            self.__tela_profissional.mostra_mensagem("Profissional removido com sucesso!")
-            self.lista_profissionais()
-        else:
-            self.__tela_profissional.mostra_mensagem("ATENÇÃO: Profissional não existente")
+        try:
+            if profissional is not None:
+                self.__profissionais.remove(profissional)
+                self.__tela_profissional.mostra_mensagem("Profissional removido com sucesso!")
+                self.lista_profissionais()
+        except ProfissionalNaoEncontradoException as e:
+            self.__tela_profissional.mostra_mensagem(e)
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()

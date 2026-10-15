@@ -6,12 +6,9 @@ from controladorProfissional import ControladorProfissional
 class ControladorAtendimento:
     def __init__(self, controladorClinica: ControladorClinica, controladorPaciente: ControladorPaciente, controladorProfissional: ControladorProfissional, controladorAcompanhante: ControladorProfissional):
         self.__atendimentos = []
-        if isinstance(controladorClinica, ControladorClinica):
-            self.__controladorClinica = controladorClinica
-        if isinstance(controladorPaciente, ControladorPaciente):
-            self.__controladorPaciente = controladorPaciente
-        if isinstance(controladorProfissional, ControladorProfissional):
-            self.__controladorProfissional = controladorProfissional
+        self.__controladorClinica = controladorClinica
+        self.__controladorPaciente = controladorPaciente
+        self.__controladorProfissional = controladorProfissional
 
     @property
     def atendimentos(self):
@@ -21,9 +18,6 @@ class ControladorAtendimento:
 
         if clinica not in self.__controladorClinica.clinicas:
             return "Clínica não cadastrada!"
-
-        if paciente.idade < 18:
-            return None
 
         if horario_inicio < clinica.horario_funcionamento_inicial:
             return "Horário de inicio fora do funcionamento da clinica!"
