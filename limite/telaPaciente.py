@@ -13,18 +13,46 @@ class TelaPaciente:
 
     def pega_dados_paciente(self):
         print("-------- DADOS PACIENTE ----------")
-        nome = input("Nome: ")
-        celular = input("Celular: ")
-        cpf = input("CPF: ")
-        try:
-            idade = int(input("Idade: "))
-        except ValueError:
-            print("Entrada inválida. Digite um número inteiro.")
-        return {"nome": nome, "celular": celular, "cpf": cpf, "idade": idade,}
+        while True:
+            try:
+                nome = str(input("Nome: "))
+                if nome.strip() != "":
+                    break
+                print("O nome não pode estar vazio.")
+            except ValueError:
+                print("Entrada inválida. Digite um nome válido.")
+
+        while True:
+            try:
+                celular = int(input("Celular (apenas números): "))
+                break
+            except ValueError:
+                print("Entrada inválida. Digite apenas números inteiros para o celular.")
+
+        while True:
+            try:
+                cpf = int(input("CPF (apenas números): "))
+                break
+            except ValueError:
+                print("Entrada inválida. Digite apenas números inteiros para o CPF.")
+
+        while True:
+            try:
+                idade = int(input("Idade: "))
+                if idade > 0:
+                    break
+                print("A idade deve ser maior que zero.")
+            except ValueError:
+                print("Entrada inválida. Digite um número inteiro para a idade.")
+
+        return {"nome": nome, "celular": celular, "cpf": cpf, "idade": idade}
 
     def pega_dados_acompanhante(self):
         print("-------- DADOS ACOMPANHANTE ----------")
-        nome = input("Nome do acompanhante: ")
+        try:
+            nome = str(input("Nome do acompanhante: "))
+        except ValueError:
+            print("Entrada inválida. Digite um nome válido.")
         return nome
 
     def seleciona_paciente(self):
@@ -40,6 +68,3 @@ class TelaPaciente:
 
     def mostra_mensagem(self, mensagem):
         print(mensagem)
-
-    def pega_acompanhante(self):
-        return input("Nome do acompanhante: ").strip()

@@ -12,11 +12,10 @@ class ControladorGeral:
         self.__controladorPaciente = ControladorPaciente(self)
         self.__controladorProfissional = ControladorProfissional(self)
         self.__controladorClinica = ControladorClinica(self)
-
         self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorPaciente, self.__controladorProfissional)
         self.__controladorPagamento = ControladorPagamento(self)
-        self.__controladorProcedimento = ControladorProcedimento(self, self.__controladorAtendimento, self.__controladorProfissional)
         self.__telaGeral = TelaGeral()
+        
 
     @property
     def controlador_paciente(self):
@@ -60,9 +59,6 @@ class ControladorGeral:
     def cadastra_pagamento(self):
         self.__controladorPagamento.abre_tela()
 
-    def cadastra_procedimento(self):
-        self.__controladorProcedimento.abre_tela()
-
     def encerra_sistema(self):
         exit(0)
 
@@ -73,7 +69,6 @@ class ControladorGeral:
             3: self.cadastra_clinica,
             4: self.cadastra_atendimento,
             5: self.cadastra_pagamento,
-            6: self.cadastra_procedimento,
             0: self.encerra_sistema
         }
 

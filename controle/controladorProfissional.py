@@ -57,7 +57,7 @@ class ControladorProfissional:
         except ProfissionalNaoEncontradoException as e:
             self.__tela_profissional.mostra_mensagem(e)
 
-    def listar_profissionais(self):
+    def lista_profissionais(self):
         if not self.__profissionais:
             raise ListaVaziaException("profissionais")
         self.__tela_profissional.lista_profissionais(self.__profissionais)

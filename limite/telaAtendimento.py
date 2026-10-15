@@ -1,11 +1,13 @@
 from datetime import date, time
 
 class TelaAtendimento:
-    def __init__(self, controladorAtendimento, controladorClinica, controladorPaciente, controladorProfissional, controladorAcompanhante):
-        self.__controladorAtendimento = (controladorAtendimento)
-        self.__controladorClinica = (controladorClinica)
-        self.__controladorPaciente = (controladorPaciente)
-        self.__controladorProfissional = (controladorProfissional)
+    def __init__(self, controladorAtendimento, controladorClinica, controladorPaciente, controladorProfissional):
+        self.__controladorAtendimento = controladorAtendimento
+        self.__controladorClinica = controladorClinica
+        self.__controladorPaciente = controladorPaciente
+        self.__controladorProfissional = controladorProfissional
+        self.__pagamentos = []
+        self.__procedimentos = []
 
     def tela_opcoes(self):
         print("\n========== ATENDIMENTOS ==========")

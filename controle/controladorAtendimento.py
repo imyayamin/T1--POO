@@ -2,19 +2,38 @@ from entidade.atendimento import Atendimento
 from .controladorClinica import ControladorClinica
 from .controladorPaciente import ControladorPaciente
 from .controladorProfissional import ControladorProfissional
+from limite.telaAtendimento import TelaAtendimento
 
 class ControladorAtendimento:
-    def __init__(self, controladorClinica: ControladorClinica, controladorPaciente: ControladorPaciente, controladorProfissional: ControladorProfissional, controladorAcompanhante: ControladorProfissional):
+    def __init__(self, ControladorClinica, ControladorPaciente, ControladorProfissional):
         self.__atendimentos = []
-        self.__controladorClinica = controladorClinica
-        self.__controladorPaciente = controladorPaciente
-        self.__controladorProfissional = controladorProfissional
+        self.__controladorClinica = ControladorClinica
+        self.__controladorPaciente = ControladorPaciente
+        self.__controladorProfissional = ControladorProfissional
+        self.__tela_atendimento = TelaAtendimento
 
     @property
     def atendimentos(self):
         return self.__atendimentos
 
-    
+    def abre_tela(self):
+            lista_opcoes = {
+                1: self.listar_atendimentos,
+                2: self.agendar_atendimento,
+                3: self.remover_atendimento,
+                0: self.retornar,
+            }
+            while True:
+                opcao = self.__tela_atendimento.tela_opcoes()
+                funcao = lista_opcoes.get(opcao)
+                if funcao is None:
+                    self.__tela_atendimento.mostra_mensagem("Opção inválida.")
+                    continue
+                
+                try:
+                    funcao()
+                except ListaVaziaException as e:
+                    self.__tela_atendimento.mostra_mensagem(str(e))
 
     def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, acompanhante=None):
 
@@ -30,6 +49,7 @@ class ControladorAtendimento:
         if horario_inicio >= horario_fim:
             return "O horário de início deve ser anterior ao horário de fim!"
 
+
         for atendimento in self.__atendimentos:
             conflito = (
                 atendimento.data == data
@@ -41,17 +61,13 @@ class ControladorAtendimento:
             if conflito:
                 return "Horário não disponível!"
 
-        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
-        self.__atendimentos.append(novoAtendimento)
-        
         valor = self.__obter_valor_atendimento(tipoAtendimento)
-
         if valor is None:
             return "Tipo de atendimento inválido!"
+        
 
-        novo_atendimento = Atendimento(clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
-
-        self.__atendimentos.append(novo_atendimento)
+        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
+        self.__atendimentos.append(novoAtendimento)
 
         return "Atendimento agendado com sucesso!"
 
