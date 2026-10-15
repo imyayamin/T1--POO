@@ -81,3 +81,5 @@ class ControladorGeral:
                 funcao_escolhida()
             else:
                 print("Opção inválida.")
+
+                
