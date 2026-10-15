@@ -1,4 +1,5 @@
 from datetime import date
+import math
 import re
 
 from entidade.pagamentoCartao import PagamentoCartao
@@ -25,8 +26,7 @@ class TelaPagamento:
         atendimentos_pendentes = [
             atendimento
             for atendimento in atendimentos
-            if atendimento.procedimentos
-            and atendimento.calcular_valor_restante() > 0
+            if atendimento.calcular_valor_restante() > 0
         ]
         atendimento = self.seleciona_atendimento(atendimentos_pendentes)
         if atendimento is None:
@@ -37,21 +37,19 @@ class TelaPagamento:
         if tipo is None:
             return None
 
-        valor_procedimentos = atendimento.valor_total_procedimentos()
-        valor_a_pagar = min(
-            valor_procedimentos,
-            atendimento.calcular_valor_restante(),
-        )
+        valor_restante = atendimento.calcular_valor_restante()
         dados = {
             "tipo": tipo,
             "data_pagamento": data_pagamento,
             "atendimento": atendimento,
             "paciente": atendimento.paciente,
-            "valor_pago": valor_a_pagar,
+            "valor_pago": (
+                valor_restante if tipo == "3" else self.informar_valor(valor_restante)
+            ),
         }
         self.mostrar_mensagem(
-            f"Valor a pagar pelo(s) procedimento(s): "
-            f"R$ {dados['valor_pago']:.2f}"
+            f"Saldo do atendimento (consulta + procedimentos): "
+            f"R$ {valor_restante:.2f}"
         )
 
         if tipo == "2":
@@ -59,7 +57,7 @@ class TelaPagamento:
         elif tipo == "3":
             dados["numero_cartao"] = self.informar_cartao()
             dados["bandeira"] = self.informar_bandeira()
-            dados["parcelas"] = self.informar_parcelas()
+            dados["parcelas"] = self.informar_parcelas(valor_restante)
 
         return dados
 
@@ -73,10 +71,12 @@ class TelaPagamento:
             print(
                 f"{indice} - {atendimento.data.isoformat()} "
                 f"{atendimento.horario_inicio.strftime('%H:%M')} | "
-                f"{atendimento.paciente.nome} | Procedimento(s): "
+                f"{atendimento.paciente.nome} | Consulta: "
+                f"R$ {atendimento.valor:.2f} | Procedimento(s): "
                 f"{', '.join(procedimento.descricao for procedimento in atendimento.procedimentos)} | "
-                f"Valor do(s) procedimento(s): "
-                f"R$ {atendimento.valor_total_procedimentos():.2f}"
+                f"Procedimentos: R$ {atendimento.valor_total_procedimentos():.2f} | "
+                f"Total: R$ {atendimento.valor_total():.2f} | "
+                f"Saldo: R$ {atendimento.calcular_valor_restante():.2f}"
             )
 
         while True:
@@ -157,14 +157,23 @@ class TelaPagamento:
             return None
         return tipo
 
-    def informar_valor(self):
+    def informar_valor(self, valor_maximo):
         while True:
             try:
-                valor = float(input("Digite o valor a pagar: R$ ").replace(",", "."))
-                if valor <= 0:
+                valor = float(
+                    input(
+                        f"Digite o valor a pagar (máximo R$ {valor_maximo:.2f}): R$ "
+                    ).replace(",", ".")
+                )
+                if not math.isfinite(valor) or valor <= 0:
                     self.mostrar_mensagem("O valor deve ser maior que zero.")
                     continue
-                return valor
+                if valor > valor_maximo:
+                    self.mostrar_mensagem(
+                        "O valor não pode ser maior que o saldo restante."
+                    )
+                    continue
+                return round(valor, 2)
             except ValueError:
                 self.mostrar_mensagem("Digite um valor válido.")
 
@@ -206,7 +215,15 @@ class TelaPagamento:
                 "Bandeira inválida. Escolha Visa, Mastercard ou Elo."
             )
 
-    def informar_parcelas(self):
+    def informar_parcelas(self, valor_total):
+        print("\nParcelas disponíveis:")
+        for parcelas in range(1, 4):
+            valor_parcela = valor_total / parcelas
+            print(
+                f"{parcelas} - {parcelas}x de R$ {valor_parcela:.2f} "
+                f"(total R$ {valor_total:.2f})"
+            )
+
         while True:
             try:
                 parcelas = int(input("Em quantas vezes deseja pagar (1 a 3)? "))
