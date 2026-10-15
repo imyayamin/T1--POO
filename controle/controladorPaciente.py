@@ -83,7 +83,7 @@ class ControladorPaciente:
             self.__tela_paciente.mostra_mensagem(str(e))
 
     def retornar(self):
-        self.__controladorgeral.abre_tela()
+        self.__controladorGeral.abre_tela()
 
     def abre_tela(self):
         lista_opcoes = {

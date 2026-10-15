@@ -7,7 +7,7 @@ class TelaGeral:
         print("3 - clinicas")
         print("4 - Agendar atendimento")
         print("5 - Registrar pagamento")
-        print("6 - Registrar procedimento")
+        print("6 - Relatórios")
         print("0 - Sair")
         print("==============================")
 

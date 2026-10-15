@@ -1,6 +1,5 @@
 class TelaProfissional:
 
-
     def tela_opcoes(self):
         print("\n========== PROFISSIONAIS ==========")
         print("1 - Listar profissionais")
@@ -57,7 +56,7 @@ class TelaProfissional:
                 break
             except ValueError:
                 print("Entrada inválida. Digite apenas números inteiros para o registro profissional.")
-                
+
         return {"nome": nome, "celular": celular, "cpf": cpf, "especialidade": especialidade, "registro_profissional": registro_profissional}
 
     def seleciona_profissional(self):

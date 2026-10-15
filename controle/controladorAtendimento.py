@@ -1,6 +1,7 @@
 from entidade.atendimento import Atendimento
 from limite.telaAtendimento import TelaAtendimento
 from exceptions.exceptions import ListaVaziaException
+from datetime import time
 
 class ControladorAtendimento:
     def __init__(self, controladorGeral, ControladorClinica, ControladorPaciente, ControladorProfissional):
@@ -23,19 +24,25 @@ class ControladorAtendimento:
     def abre_tela(self):
         self.__tela_atendimento.agendar_atendimento()
 
-    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento):
+    def horario_dentro_da_clinica(self, clinica, horario_inicio, horario_fim):
+        abertura = time(clinica.horario_inicial)
+        fechamento = time(clinica.horario_final) if clinica.horario_final < 24 else time.max
+        return horario_inicio >= abertura and horario_fim <= fechamento
+    
+    def agendar_atendimento(self, clinica, paciente, profissional, data, tipoAtendimento):
         if clinica not in self.__controladorClinica.clinicas:
             return "Clínica não cadastrada!"
+        if paciente not in self.__controladorPaciente.pacientes:
+            return "Paciente não cadastrado!"
+        if profissional not in self.__controladorProfissional.profissionais:
+            return "Profissional não cadastrado!"
 
-        if horario_inicio < clinica.horario_funcionamento_inicial:
-            return "Horário de inicio fora do funcionamento da clinica!"
+        if horario_fim <= horario_inicio:
+            return "O horário final deve ser maior que o inicial!"
 
-        if horario_fim > clinica.horario_funcionamento_final:
-            return "Horário de fim fora do funcionamento da clinica!"
-
-        if horario_inicio >= horario_fim:
-            return "O horário de início deve ser anterior ao horário de fim!"
-
+        if not self.horario_dentro_da_clinica(clinica, horario_inicio, horario_fim):
+            return (f"Fora do horário da clínica "
+                    f"({clinica.horario_inicial}h às {clinica.horario_final}h)!")
 
         for atendimento in self.__atendimentos:
             conflito = (
@@ -44,21 +51,19 @@ class ControladorAtendimento:
                 and horario_inicio < atendimento.horario_fim
                 and horario_fim > atendimento.horario_inicio
             )
-
             if conflito:
                 return "Horário não disponível!"
 
-        valor = self.__obter_valor_atendimento(tipoAtendimento)
+        valor = self.obter_valor_atendimento(tipoAtendimento)
         if valor is None:
             return "Tipo de atendimento inválido!"
-        
 
-        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor)
-        self.__atendimentos.append(novoAtendimento)
-
+        novo = Atendimento(clinica, paciente, profissional, data,
+                           horario_inicio, horario_fim, tipoAtendimento, valor)
+        self.__atendimentos.append(novo)
         return "Atendimento agendado com sucesso!"
 
-    def __obter_valor_atendimento(self, tipoAtendimento): #nao deveria ser publico?
+    def obter_valor_atendimento(self, tipoAtendimento):
 
         valores = {
             "Consulta": 100,
