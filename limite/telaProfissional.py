@@ -23,12 +23,41 @@ class TelaProfissional:
 
     def pega_dados_profissional(self):
         print("-------- DADOS PROFISSIONAL ----------")
-        nome = input("Nome: ")
-        celular = input("Celular: ")
-        cpf = input("CPF: ")
-        especialidade = input("Especialidade: ")
-        registro_profissional = input("Registro profissional: ")
-
+        while True:
+            try:
+                nome = str(input("Nome: "))
+                if nome.strip() != "":
+                    break
+                print("O nome não pode estar vazio.")
+            except ValueError:
+                print("Entrada inválida. Digite um nome válido.")
+        while True:
+            try:
+                celular = int(input("Celular (apenas números): "))
+                break
+            except ValueError:
+                print("Entrada inválida. Digite apenas números inteiros para o celular.")
+        while True:
+            try:
+                cpf = int(input("CPF (apenas números): "))
+                break
+            except ValueError:
+                print("Entrada inválida. Digite apenas números inteiros para o CPF.")
+        while True:
+            try:
+                especialidade = str(input("Especialidade: "))
+                if especialidade.strip() != "":
+                    break
+                print("A especialidade não pode estar vazia.")
+            except ValueError:
+                print("Entrada inválida. Digite uma especialidade válida.")
+        while True:
+            try:
+                registro_profissional = int(input("Registro profissional (apenas números): "))
+                break
+            except ValueError:
+                print("Entrada inválida. Digite apenas números inteiros para o registro profissional.")
+                
         return {"nome": nome, "celular": celular, "cpf": cpf, "especialidade": especialidade, "registro_profissional": registro_profissional}
 
     def seleciona_profissional(self):

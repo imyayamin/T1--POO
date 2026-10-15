@@ -21,9 +21,30 @@ class TelaClinica:
 
     def pega_dados_clinica(self):
         print("-------- DADOS CLÍNICA ----------")
-        nome = input("Nome: ")
-        cidade = input("Cidade: ")
-        descricao = input("Descrição: ")
+        while True:
+            try:
+                nome = str(input("Nome: "))
+                if nome.strip() != "":
+                    break
+                print("O nome não pode estar vazio.")
+            except ValueError:
+                print("Entrada inválida. Digite um nome válido.")
+        while True: 
+            try:
+                cidade = str(input("Cidade: "))
+                if cidade.strip() != "":
+                    break
+                print("A cidade não pode estar vazia.")
+            except ValueError:
+                print("Entrada inválida. Digite uma cidade válida.")
+        while True:
+            try:
+                descricao = str(input("Descrição: "))
+                if descricao.strip() != "":
+                    break
+                print("A descrição não pode estar vazia.")
+            except ValueError:
+                print("Entrada inválida. Digite uma descrição válida.")
         
         try:
             horario_inicial = int(input("Horário inicial (ex: 8): "))
