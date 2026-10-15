@@ -4,10 +4,10 @@ from exceptions.exceptions import (AcompanhanteObrigatorioException, PacienteRep
 
 class ControladorPaciente:
 
-    def __init__(self, controladorgeral):
+    def __init__(self, controladorGeral):
         self.__pacientes = []
         self.__tela_paciente = TelaPaciente()
-        self.__controladorgeral = controladorgeral
+        self.__controladorGeral = controladorGeral
 
     @property
     def pacientes(self):

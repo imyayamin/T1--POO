@@ -4,10 +4,10 @@ from exceptions.exceptions import (ListaVaziaException, ClinicaRepetidaException
 
 class ControladorClinica:
 
-    def __init__(self, controladorgeral):
+    def __init__(self, controladorGeral):
         self.__clinicas = []
         self.__tela_clinica = TelaClinica()
-        self.__controladorgeral = controladorgeral
+        self.__controladorGeral = controladorGeral
 
     @property
     def clinicas(self):
@@ -80,7 +80,7 @@ class ControladorClinica:
             self.__tela_clinica.mostra_mensagem(str(e))
 
     def retornar(self):
-        self.__controladorgeral.abre_tela()
+        self.__controladorGeral.abre_tela()
 
     def abre_tela(self):
         lista_opcoes = {

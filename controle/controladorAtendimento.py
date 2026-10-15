@@ -3,9 +3,9 @@ from limite.telaAtendimento import TelaAtendimento
 from exceptions.exceptions import ListaVaziaException
 
 class ControladorAtendimento:
-    def __init__(self, controladorgeral, ControladorClinica, ControladorPaciente, ControladorProfissional):
+    def __init__(self, controladorGeral, ControladorClinica, ControladorPaciente, ControladorProfissional):
         self.__atendimentos = []
-        self.__controladorGeral = controladorgeral
+        self.__controladorGeral = controladorGeral
         self.__controladorClinica = ControladorClinica
         self.__controladorPaciente = ControladorPaciente
         self.__controladorProfissional = ControladorProfissional
