@@ -34,9 +34,6 @@ class TelaPaciente:
             return None
 
     def lista_pacientes(self, pacientes):
-        if not pacientes:
-            print("Nenhum paciente cadastrado.")
-            return
         print("\nPacientes cadastrados:")
         for i, paciente in enumerate(pacientes, start=1):
             print(f"{i} - {paciente.nome} - CPF: {paciente.cpf} - Idade: {paciente.idade}")

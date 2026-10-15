@@ -1,6 +1,6 @@
 from entidade.paciente import Paciente
 from limite.telaPaciente import TelaPaciente
-from exceptions.exceptions import (AcompanhanteObrigatorioException, PacienteRepetidoException, EntradaInvalidaException)
+from exceptions.exceptions import (AcompanhanteObrigatorioException, PacienteRepetidoException, EntradaInvalidaException, ListaVaziaException)
 
 class ControladorPaciente:
 
@@ -58,10 +58,8 @@ class ControladorPaciente:
             self.__tela_paciente.mostra_mensagem(str(e))
 
     def listar_pacientes(self):
-        try:
-            if not self.__pacientes:
-                raise ListaVaziaException("pacientes")
-
+        if not self.__pacientes:
+            raise ListaVaziaException("pacientes")
         self.__tela_paciente.lista_pacientes(self.__pacientes)
         return self.__pacientes
 

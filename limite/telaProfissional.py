@@ -16,12 +16,6 @@ class TelaProfissional:
             return None
 
     def listar_profissionais(self, profissionais):
-        profissionais = self.__controladorProfissional.profissionais
-        
-        if not profissionais:
-            print("Nenhum profissional cadastrado.")
-            return None
-        
         print("\nProfissionais cadastrados:")
         
         for i, profissional in enumerate(profissionais, start=1):

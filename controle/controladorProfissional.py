@@ -58,21 +58,10 @@ class ControladorProfissional:
             self.__tela_profissional.mostra_mensagem(e)
 
     def listar_profissionais(self):
-        try:
-            if not self.__profissionais:
-                raise ListaVaziaException("profissionais")
-
-            for profissional in self.__profissionais:
-                self.__tela_profissional.mostra_profissional({
-                    "nome": profissional.nome,
-                    "celular": profissional.celular,
-                    "cpf": profissional.cpf,
-                    "especialidade": profissional.especialidade,
-                    "registro_profissional": profissional.registro_profissional,
-                })
-
-        except ListaVaziaException as e:
-            self.__tela_profissional.mostra_mensagem(e)
+        if not self.__profissionais:
+            raise ListaVaziaException("profissionais")
+        self.__tela_profissional.lista_profissionais(self.__profissionais)
+        return self.__profissionais
 
     def excluir_profissional(self):
         self.lista_profissionais()
