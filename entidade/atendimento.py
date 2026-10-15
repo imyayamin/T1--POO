@@ -70,6 +70,7 @@ class Atendimento:
     @paciente.setter
     def paciente(self, paciente: Paciente):
         self.__paciente = paciente
+        self.__acompanhante = paciente.acompanhante
 
     @profissional.setter
     def profissional(self, profissional: Profissional):
@@ -129,6 +130,9 @@ class Atendimento:
         if pagamento.atendimento != self:
             return "Pagamento não pertence a este atendimento!"
 
+        if pagamento.paciente != self.__paciente:
+            return "O paciente do pagamento não corresponde ao atendimento!"
+
         if pagamento.data_pagamento > self.__data:
             return "Pagamento deve ser realizado até a data do atendimento!"
 
@@ -154,3 +158,10 @@ class Atendimento:
             return "Pagamento do atendimento concluído!"
 
         return "Pagamento registrado com sucesso! " f"\nValor restante: R$ {novo_valor_restante:.2f}"
+
+    def remover_pagamento(self, pagamento):
+        if pagamento not in self.__pagamentos:
+            return False
+
+        self.__pagamentos.remove(pagamento)
+        return True

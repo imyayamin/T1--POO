@@ -12,7 +12,7 @@ class TelaProcedimento:
                 f"{i + 1} - "
                 f"Paciente: {atendimento.paciente.nome} | "
                 f"Data: {atendimento.data} | "
-                f"Tipo: {atendimento.tipo_atendimento}"
+                f"Tipo: {atendimento.tipoAtendimento}"
             )
 
         while True:

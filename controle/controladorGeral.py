@@ -4,6 +4,7 @@ from controle.controladorClinica import ControladorClinica
 from controle.controladorAtendimento import ControladorAtendimento
 from controle.controladorPagamento import ControladorPagamento
 from controle.controladorProcedimento import ControladorProcedimento
+from controle.controladorRelatorio import ControladorRelatorio
 from limite.telaGeral import TelaGeral
 
 class ControladorGeral:
@@ -14,6 +15,15 @@ class ControladorGeral:
         self.__controladorClinica = ControladorClinica(self)
         self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorPaciente, self.__controladorProfissional)
         self.__controladorPagamento = ControladorPagamento(self)
+        self.__controladorProcedimento = ControladorProcedimento(
+            self,
+            self.__controladorAtendimento,
+            self.__controladorProfissional,
+        )
+        self.__controladorRelatorio = ControladorRelatorio(
+            self.__controladorClinica,
+            self.__controladorAtendimento,
+        )
         self.__telaGeral = TelaGeral()
         
 
@@ -39,7 +49,7 @@ class ControladorGeral:
 
     @property
     def controlador_procedimento(self):
-        return self.__controlador_procedimento
+        return self.__controladorProcedimento
 
     def inicializa_sistema(self):
         self.abre_tela()
@@ -59,6 +69,9 @@ class ControladorGeral:
     def cadastra_pagamento(self):
         self.__controladorPagamento.abre_tela()
 
+    def cadastra_procedimento(self):
+        self.__controladorProcedimento.abre_tela()
+
     def encerra_sistema(self):
         exit(0)
 
@@ -69,6 +82,8 @@ class ControladorGeral:
             3: self.cadastra_clinica,
             4: self.cadastra_atendimento,
             5: self.cadastra_pagamento,
+            6: self.__controladorRelatorio.abre_tela,
+            7: self.cadastra_procedimento,
             0: self.encerra_sistema
         }
 
