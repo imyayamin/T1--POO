@@ -1,3 +1,5 @@
+import re
+
 from .abstractPagamento import Pagamento
 
 class PagamentoCartao(Pagamento):
@@ -5,8 +7,8 @@ class PagamentoCartao(Pagamento):
     def __init__(self, data_pagamento, atendimento, paciente, valor_pago, numero_cartao, bandeira, parcela):
         super().__init__(data_pagamento, atendimento, paciente, valor_pago)
 
-        self.__numero_cartao = numero_cartao
-        self.__bandeira = bandeira
+        self.__numero_cartao = re.sub(r"[\s-]", "", numero_cartao)
+        self.__bandeira = bandeira.strip().lower()
         self.__parcela = parcela
 
     @property
@@ -44,7 +46,7 @@ class PagamentoCartao(Pagamento):
         if self.__bandeira not in ["visa", "mastercard", "elo"]:
             return False
 
-        if self.__parcela < 1 or self.__parcela > 3:
+        if not isinstance(self.__parcela, int) or not 1 <= self.__parcela <= 3:
             return False
 
         return True

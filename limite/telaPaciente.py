@@ -1,15 +1,20 @@
+import re
+
+
 class TelaPaciente:
     def tela_opcoes(self):
         print("\n========== PACIENTES ==========")
         print("1 - Listar pacientes")
         print("2 - Cadastrar paciente")
         print("3 - Remover paciente")
+        print("4 - Alterar paciente")
         print("0 - Retornar")
         print("==============================")
         try:
             return int(input("Escolha uma opção: "))
         except ValueError:
             print("Entrada inválida. Digite um número inteiro.")
+            return None
 
     def pega_dados_paciente(self):
         print("-------- DADOS PACIENTE ----------")
@@ -23,25 +28,31 @@ class TelaPaciente:
                 print("Entrada inválida. Digite um nome válido.")
 
         while True:
-            try:
-                celular = int(input("Celular (apenas números): "))
+            celular = re.sub(
+                r"\D",
+                "",
+                input("Celular (com DDD, 10 ou 11 dígitos): ").strip(),
+            )
+            if len(celular) in (10, 11):
                 break
-            except ValueError:
-                print("Entrada inválida. Digite apenas números inteiros para o celular.")
+            print("Telefone inválido. Informe DDD e número (10 ou 11 dígitos).")
 
         while True:
-            try:
-                cpf = int(input("CPF (apenas números): "))
+            cpf = re.sub(
+                r"\D",
+                "",
+                input("CPF (11 dígitos): ").strip(),
+            )
+            if cpf.isdigit() and len(cpf) == 11:
                 break
-            except ValueError:
-                print("Entrada inválida. Digite apenas números inteiros para o CPF.")
+            print("CPF inválido. Informe os 11 dígitos.")
 
         while True:
             try:
                 idade = int(input("Idade: "))
-                if idade > 0:
+                if 0 <= idade <= 120:
                     break
-                print("A idade deve ser maior que zero.")
+                print("A idade deve estar entre 0 e 120 anos.")
             except ValueError:
                 print("Entrada inválida. Digite um número inteiro para a idade.")
 
@@ -49,17 +60,14 @@ class TelaPaciente:
 
     def pega_dados_acompanhante(self):
         print("-------- DADOS ACOMPANHANTE ----------")
-        try:
-            nome = str(input("Nome do acompanhante: "))
-        except ValueError:
-            print("Entrada inválida. Digite um nome válido.")
-        return nome
+        return input("Nome do acompanhante: ").strip()
 
     def seleciona_paciente(self):
-        try:
-            return int(input("CPF do paciente: "))
-        except ValueError:
-            return None
+        cpf = re.sub(r"\D", "", input("CPF do paciente (11 dígitos): ").strip())
+        if len(cpf) == 11:
+            return cpf
+        self.mostra_mensagem("CPF inválido.")
+        return None
 
     def lista_pacientes(self, pacientes):
         print("\nPacientes cadastrados:")

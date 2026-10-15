@@ -1,3 +1,6 @@
+import re
+
+
 class TelaProfissional:
 
     def tela_opcoes(self):
@@ -31,17 +34,23 @@ class TelaProfissional:
             except ValueError:
                 print("Entrada inválida. Digite um nome válido.")
         while True:
-            try:
-                celular = int(input("Celular (apenas números): "))
+            celular = re.sub(
+                r"\D",
+                "",
+                input("Celular (com DDD, 10 ou 11 dígitos): ").strip(),
+            )
+            if len(celular) in (10, 11):
                 break
-            except ValueError:
-                print("Entrada inválida. Digite apenas números inteiros para o celular.")
+            print("Telefone inválido. Informe DDD e número (10 ou 11 dígitos).")
         while True:
-            try:
-                cpf = int(input("CPF (apenas números): "))
+            cpf = re.sub(
+                r"\D",
+                "",
+                input("CPF (11 dígitos): ").strip(),
+            )
+            if cpf.isdigit() and len(cpf) == 11:
                 break
-            except ValueError:
-                print("Entrada inválida. Digite apenas números inteiros para o CPF.")
+            print("CPF inválido. Informe os 11 dígitos.")
         while True:
             try:
                 especialidade = str(input("Especialidade: "))
@@ -51,20 +60,27 @@ class TelaProfissional:
             except ValueError:
                 print("Entrada inválida. Digite uma especialidade válida.")
         while True:
-            try:
-                registro_profissional = int(input("Registro profissional (apenas números): "))
+            registro_profissional = re.sub(
+                r"\D",
+                "",
+                input("Registro profissional (apenas números): ").strip(),
+            )
+            if registro_profissional:
                 break
-            except ValueError:
-                print("Entrada inválida. Digite apenas números inteiros para o registro profissional.")
+            print("O registro profissional deve conter números.")
 
         return {"nome": nome, "celular": celular, "cpf": cpf, "especialidade": especialidade, "registro_profissional": registro_profissional}
 
     def seleciona_profissional(self):
-        try:
-            return int(input("CPF do profissional: "))
-        except ValueError:
-            self.mostra_mensagem("CPF inválido.")
-            return None
+        cpf = re.sub(
+            r"\D",
+            "",
+            input("CPF do profissional (11 dígitos): ").strip(),
+        )
+        if len(cpf) == 11:
+            return cpf
+        self.mostra_mensagem("CPF inválido.")
+        return None
 
     def mostra_mensagem(self, mensagem):
         print(mensagem)

@@ -1,3 +1,5 @@
+import re
+
 from .abstractPagamento import Pagamento
 
 
@@ -6,7 +8,7 @@ class PagamentoPix(Pagamento):
     def __init__(self, data_pagamento, atendimento, paciente, valor_pago, cpf_pagador):
         super().__init__(data_pagamento, atendimento, paciente, valor_pago)
 
-        self.__cpf_pagador = cpf_pagador
+        self.__cpf_pagador = re.sub(r"[.\-\s]", "", cpf_pagador)
 
     @property
     def cpf_pagador(self):

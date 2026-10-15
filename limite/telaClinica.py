@@ -12,12 +12,16 @@ class TelaClinica:
             try:
                 return int(input("Escolha uma opção: "))
             except ValueError:
-                return "Opção invalída"
+                return None
 
     def lista_clinicas(self, clinicas):
         print("\nClínicas cadastradas:")
         for i, clinica in enumerate(clinicas, start=1):
-            print(f"{i} - {clinica.nome} | Cidade: {clinica.cidade} | Horário: {clinica.horario_inicial}h às {clinica.horario_final}h")
+            print(
+                f"{i} - {clinica.nome} | Cidade: {clinica.cidade} | "
+                f"Horário: {clinica.horario_funcionamento_inicial}h às "
+                f"{clinica.horario_funcionamento_final}h"
+            )
 
     def pega_dados_clinica(self):
         print("-------- DADOS CLÍNICA ----------")
@@ -47,8 +51,8 @@ class TelaClinica:
                 print("Entrada inválida. Digite uma descrição válida.")
         
         try:
-            horario_inicial = int(input("Horário inicial (ex: 8): "))
-            horario_final = int(input("Horário final (ex: 18): "))
+            horario_inicial = int(input("Horário inicial (0 a 23): "))
+            horario_final = int(input("Horário final (1 a 24): "))
         except ValueError:
             raise EntradaInvalidaException("horário")
 
