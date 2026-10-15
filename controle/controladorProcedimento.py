@@ -61,12 +61,15 @@ class ControladorProcedimento:
         atendimento = self.__controladorAtendimento.selecionar_atendimento()
         if atendimento is None:
             return
-        descricao = self.__telaProcedimento.informar_descricao()
-        custo = self.__telaProcedimento.informar_custo()
+
+        tipo = self.__controladorGeral.controlador_tipo_procedimento.seleciona_tipo()
+        if tipo is None:
+            return
+
         mensagem = self.registrar_procedimento(
             atendimento,
-            descricao,
-            custo,
+            tipo.nome,
+            tipo.valor,
         )
         self.__telaProcedimento.mostra_mensagem(mensagem)
 
@@ -162,11 +165,6 @@ class ControladorProcedimento:
             return "Atendimento não encontrado."
         if procedimento not in atendimento.procedimentos:
             return "Procedimento não pertence a este atendimento."
-        if len(atendimento.procedimentos) == 1:
-            return (
-                "Não é possível remover o único procedimento: todo "
-                "atendimento precisa ter ao menos um procedimento."
-            )
         novo_total = atendimento.valor_total() - procedimento.custo
         total_pago = sum(
             pagamento.valor_pago for pagamento in atendimento.pagamentos

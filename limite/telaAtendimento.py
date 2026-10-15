@@ -1,3 +1,4 @@
+import math
 from datetime import date, time
 
 class TelaAtendimento:
@@ -7,7 +8,7 @@ class TelaAtendimento:
         print("2 - Listar atendimentos")
         print("3 - Editar atendimento")
         print("4 - Remover atendimento")
-        print("5 - Listar procedimentos")
+        print("5 - Listar procedimentos e catálogo de preços")
         print("6 - Editar procedimento")
         print("7 - Remover procedimento")
         print("8 - Adicionar procedimento a um atendimento")
@@ -107,6 +108,52 @@ class TelaAtendimento:
             if 1 <= escolha <= len(tipos):
                 return tipos[escolha - 1].nome
             print("Opção inválida. Escolha um tipo válido.")
+
+    def lista_tipos_procedimento(self, tipos):
+        if not tipos:
+            self.mostra_mensagem("Nenhum tipo de procedimento cadastrado.")
+            return
+
+        print("\nTipos de procedimento cadastrados:")
+        for indice, tipo in enumerate(tipos, start=1):
+            print(f"{indice} - {tipo.nome} | R$ {tipo.valor:.2f}")
+
+    def seleciona_tipo_procedimento(self, tipos):
+        if not tipos:
+            self.mostra_mensagem("Nenhum tipo de procedimento cadastrado.")
+            return None
+
+        self.lista_tipos_procedimento(tipos)
+        while True:
+            try:
+                escolha = int(input("Escolha o tipo de procedimento: "))
+            except ValueError:
+                self.mostra_mensagem("Digite um número válido.")
+                continue
+
+            if 1 <= escolha <= len(tipos):
+                return tipos[escolha - 1]
+            self.mostra_mensagem("Opção inválida.")
+
+    def pega_dados_tipo_procedimento(self):
+        while True:
+            nome = input("Nome do tipo de procedimento: ").strip()
+            if nome:
+                break
+            self.mostra_mensagem("O nome não pode estar vazio.")
+
+        while True:
+            try:
+                valor = float(
+                    input("Valor do procedimento: R$ ").replace(",", ".")
+                )
+            except ValueError:
+                self.mostra_mensagem("Digite um valor numérico válido.")
+                continue
+
+            if math.isfinite(valor) and valor > 0:
+                return {"nome": nome, "valor": valor}
+            self.mostra_mensagem("O valor deve ser maior que zero.")
 
     def informar_data(self):
         while True:

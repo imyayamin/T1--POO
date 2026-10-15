@@ -29,7 +29,7 @@ class ControladorAtendimento:
             2: self.listar_atendimentos,
             3: self.editar_atendimento,
             4: self.remover_atendimento,
-            5: self.__controladorGeral.controlador_procedimento.listar_procedimentos,
+            5: self.listar_procedimentos_e_catalogo,
             6: self.__controladorGeral.controlador_procedimento.editar_procedimento_menu,
             7: self.__controladorGeral.controlador_procedimento.remover_procedimento,
             8: self.__controladorGeral.controlador_procedimento.adicionar_procedimento_menu,
@@ -46,6 +46,10 @@ class ControladorAtendimento:
                 continue
 
             funcao_escolhida()
+
+    def listar_procedimentos_e_catalogo(self):
+        self.__controladorGeral.controlador_procedimento.listar_procedimentos()
+        self.__controladorGeral.controlador_tipo_procedimento.listar_tipos()
 
     def horario_dentro_da_clinica(self, clinica, horario_inicio, horario_fim):
         try:
@@ -153,21 +157,6 @@ class ControladorAtendimento:
             return
 
         resultado = self.agendar_atendimento(**dados)
-        if resultado == "Atendimento agendado com sucesso!":
-            atendimento = self.__atendimentos[-1]
-            procedimento_registrado = (
-                self.__controladorGeral.controlador_procedimento.abre_tela(
-                    atendimento
-                )
-            )
-            if not procedimento_registrado:
-                self.__atendimentos.remove(atendimento)
-                self.__tela_atendimento.mostra_mensagem(
-                    "Atendimento cancelado porque não foi possível registrar "
-                    "o procedimento obrigatório."
-                )
-                return
-
         self.__tela_atendimento.mostra_mensagem(resultado)
 
     def listar_atendimentos(self):

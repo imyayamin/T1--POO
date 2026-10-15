@@ -6,6 +6,7 @@ from controle.controladorPagamento import ControladorPagamento
 from controle.controladorProcedimento import ControladorProcedimento
 from controle.controladorRelatorio import ControladorRelatorio
 from controle.controladorTipoAtendimento import ControladorTipoAtendimento
+from controle.controladorTipoProcedimento import ControladorTipoProcedimento
 from limite.telaGeral import TelaGeral
 
 class ControladorGeral:
@@ -22,6 +23,7 @@ class ControladorGeral:
             self.__controladorProfissional,
             self.__controladorTipoAtendimento,
         )
+        self.__controladorTipoProcedimento = ControladorTipoProcedimento(self)
         self.__controladorPagamento = ControladorPagamento(self)
         self.__controladorProcedimento = ControladorProcedimento(
             self,
@@ -58,6 +60,10 @@ class ControladorGeral:
     @property
     def controlador_tipo_atendimento(self):
         return self.__controladorTipoAtendimento
+
+    @property
+    def controlador_tipo_procedimento(self):
+        return self.__controladorTipoProcedimento
 
     @property
     def controlador_procedimento(self):
