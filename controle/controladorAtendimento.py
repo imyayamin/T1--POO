@@ -1,42 +1,29 @@
 from entidade.atendimento import Atendimento
-from .controladorClinica import ControladorClinica
-from .controladorPaciente import ControladorPaciente
-from .controladorProfissional import ControladorProfissional
 from limite.telaAtendimento import TelaAtendimento
+from exceptions.exceptions import ListaVaziaException
 
 class ControladorAtendimento:
-    def __init__(self, ControladorClinica, ControladorPaciente, ControladorProfissional):
+    def __init__(self, controladorgeral, ControladorClinica, ControladorPaciente, ControladorProfissional):
         self.__atendimentos = []
+        self.__controladorGeral = controladorgeral
         self.__controladorClinica = ControladorClinica
         self.__controladorPaciente = ControladorPaciente
         self.__controladorProfissional = ControladorProfissional
-        self.__tela_atendimento = TelaAtendimento
+        self.__tela_atendimento = TelaAtendimento(
+            self, 
+            self.__controladorClinica, 
+            self.__controladorPaciente, 
+            self.__controladorProfissional
+        )
 
     @property
     def atendimentos(self):
         return self.__atendimentos
 
     def abre_tela(self):
-            lista_opcoes = {
-                1: self.listar_atendimentos,
-                2: self.agendar_atendimento,
-                3: self.remover_atendimento,
-                0: self.retornar,
-            }
-            while True:
-                opcao = self.__tela_atendimento.tela_opcoes()
-                funcao = lista_opcoes.get(opcao)
-                if funcao is None:
-                    self.__tela_atendimento.mostra_mensagem("Opção inválida.")
-                    continue
-                
-                try:
-                    funcao()
-                except ListaVaziaException as e:
-                    self.__tela_atendimento.mostra_mensagem(str(e))
+        self.__tela_atendimento.agendar_atendimento()
 
-    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, acompanhante=None):
-
+    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento):
         if clinica not in self.__controladorClinica.clinicas:
             return "Clínica não cadastrada!"
 
@@ -66,7 +53,7 @@ class ControladorAtendimento:
             return "Tipo de atendimento inválido!"
         
 
-        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante)
+        novoAtendimento = Atendimento( clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor)
         self.__atendimentos.append(novoAtendimento)
 
         return "Atendimento agendado com sucesso!"

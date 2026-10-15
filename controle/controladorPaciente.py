@@ -19,7 +19,7 @@ class ControladorPaciente:
                 return paciente
         return None
 
-    def cadastrar_paciente(self):
+    def incluir_paciente(self):
         try:
             dados = self.__tela_paciente.pega_dados_paciente()
         except EntradaInvalidaException as e:
@@ -43,7 +43,7 @@ class ControladorPaciente:
                 self.__tela_paciente.mostra_mensagem(
                     "Paciente menor de idade. Informe o acompanhante:"
                 )
-                acompanhante = self.__tela_paciente.pega_acompanhante()
+                acompanhante = self.__tela_paciente.pega_dados_acompanhante()
                 if not acompanhante:
                     raise AcompanhanteObrigatorioException()
 
@@ -88,7 +88,7 @@ class ControladorPaciente:
     def abre_tela(self):
         lista_opcoes = {
             1: self.listar_pacientes,
-            2: self.cadastrar_paciente,
+            2: self.incluir_paciente,
             3: self.remover_paciente,
             0: self.retornar,
         }

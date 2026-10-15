@@ -82,9 +82,9 @@ class ControladorProfissional:
 
     def abre_tela(self):
         lista_opcoes = {
-            1: self.incluir_profissional,
-            2: self.alterar_profissional,
-            3: self.lista_profissionais,
+            1: self.lista_profissionais,
+            2: self.incluir_profissional,
+            3: self.alterar_profissional,
             4: self.excluir_profissional,
             0: self.retornar,
         }
@@ -95,4 +95,8 @@ class ControladorProfissional:
             if funcao is None:
                 self.__tela_profissional.mostra_mensagem("Opção inválida.")
                 continue
-            funcao()
+            try:
+                funcao()
+            except ListaVaziaException as e:
+                self.__tela_profissional.mostra_mensagem(str(e))
+        

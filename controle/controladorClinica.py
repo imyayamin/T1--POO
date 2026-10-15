@@ -13,6 +13,12 @@ class ControladorClinica:
     def clinicas(self):
         return self.__clinicas
 
+    def pega_clinica_por_nome(self, nome: str):
+        for clinica in self.__clinicas:
+            if clinica.nome == nome:
+                return clinica
+        return None
+
     def incluir_clinica(self):
         try:
             dados_clinica = self.__tela_clinica.pega_dados_clinica()
@@ -25,11 +31,9 @@ class ControladorClinica:
             horario_final = dados_clinica["horario_final"]
             nome = dados_clinica["nome"]
 
-            # Validação de horário
             if horario_inicial >= horario_final:
                 raise HorarioInvalidoException()
 
-            # Validação de duplicidade
             if self.pega_clinica_por_nome(nome) is not None:
                 raise ClinicaRepetidaException(nome)
 

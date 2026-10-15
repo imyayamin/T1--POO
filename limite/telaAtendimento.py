@@ -2,44 +2,10 @@ from datetime import date, time
 
 class TelaAtendimento:
     def __init__(self, controladorAtendimento, controladorClinica, controladorPaciente, controladorProfissional):
-        self.__controladorAtendimento = controladorAtendimento
-        self.__controladorClinica = controladorClinica
-        self.__controladorPaciente = controladorPaciente
-        self.__controladorProfissional = controladorProfissional
-        self.__pagamentos = []
-        self.__procedimentos = []
-
-    def tela_opcoes(self):
-        print("\n========== ATENDIMENTOS ==========")
-        print("1 - Listar atendimentos")
-        print("2 - Agendar atendimento")
-        print("3 - Remover atendimento")
-        print("0 - Voltar")
-        print("==================================")
-        
-        try:
-            return int(input("Escolha uma opção: "))
-        except ValueError:
-            return None
-
-    def abre_tela(self):
-        lista_opcoes = {
-            1: self.__controladorAtendimento.listar_atendimentos,
-            2: self.agendar_atendimento,
-            3: self.__controladorAtendimento.remover_atendimento,
-            0: self.__controladorAtendimento.retornar,
-        }
-        while True:
-            opcao = self.tela_opcoes()
-            funcao = lista_opcoes.get(opcao)
-            if funcao is None:
-                self.mostra_mensagem("Opção inválida.")
-                continue
-            
-            try:
-                funcao()
-            except Exception as e:
-                self.mostra_mensagem(str(e))
+        self.__controladorAtendimento = (controladorAtendimento)
+        self.__controladorClinica = (controladorClinica)
+        self.__controladorPaciente = (controladorPaciente)
+        self.__controladorProfissional = (controladorProfissional)
 
     def escolher_clinica(self):
 
@@ -55,20 +21,17 @@ class TelaAtendimento:
             print(f"{i} - {clinica.nome}")
 
         while True:
-
             try:
                 opcao = int(input("Escolha a clínica: "))
 
                 if 1 <= opcao <= len(clinicas):
                     return clinicas[opcao - 1]
-
                 print("Opção inválida.")
 
             except ValueError:
                 print("Digite um número válido.")
 
     def escolher_paciente(self):
-
         pacientes = self.__controladorPaciente.pacientes
 
         if not pacientes:
@@ -80,21 +43,17 @@ class TelaAtendimento:
         for i, paciente in enumerate(pacientes, start=1):
             print(f"{i} - {paciente.nome}")
 
+        opcao = int(input("Escolha o paciente: "))
         while True:
-
             try:
                 opcao = int(input("Escolha o paciente: "))
-
                 if 1 <= opcao <= len(pacientes):
                     return pacientes[opcao - 1]
-
-                print("Opção inválida.")
-
             except ValueError:
-
                 print("Digite um número válido.")
 
     def escolher_profissional(self):
+        profissionais = self.__controladorProfissional.profissionais
 
         profissionais = (self.__controladorProfissional.profissionais)
 
@@ -107,8 +66,8 @@ class TelaAtendimento:
         for i, profissional in enumerate(profissionais, start=1):
             print(f"{i} - {profissional.nome}")
 
+        opcao = int(input("Escolha o profissional: "))
         while True:
-
             try:
                 opcao = int(input("Escolha o profissional: "))
 
@@ -116,10 +75,13 @@ class TelaAtendimento:
                     return profissionais[opcao - 1]
 
                 print("Opção inválida.")
-
             except ValueError:
-
                 print("Digite um número válido.")
+
+    def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor, acompanhante):
+        clinica = self.escolher_clinica()
+        profissional = self.escolher_profissional()
+        paciente = self.escolher_paciente()
 
     def escolher_tipo_atendimento(self):
 
@@ -130,7 +92,6 @@ class TelaAtendimento:
         print("4 - Outro")
 
         opcao = input("Escolha o tipo de atendimento: ").strip()
-
         match opcao:
 
             case "1":
@@ -143,13 +104,12 @@ class TelaAtendimento:
                 return "Retorno"
 
             case "4":
-                return "Outro"#deixar informar
+                return "Outro"
 
             case _:
-                return None
+                return "Tipo de atendimento inválido!"
 
     def informar_data(self):
-
         while True:
 
             try:
@@ -209,6 +169,4 @@ class TelaAtendimento:
         if tipoAtendimento is None:
             return "Tipo de atendimento inválido!"
 
-        resultado = (self.__controladorAtendimento.agendar_atendimento(clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento ))
-
-        return resultado
+        resultado = self.__controladorAtendimento.agendar_atendimento(clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, valor)

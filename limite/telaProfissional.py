@@ -15,7 +15,7 @@ class TelaProfissional:
         except ValueError:
             return None
 
-    def listar_profissionais(self, profissionais):
+    def lista_profissionais(self, profissionais):
         print("\nProfissionais cadastrados:")
         
         for i, profissional in enumerate(profissionais, start=1):
