@@ -1,18 +1,16 @@
 from datetime import date, time
 
 class TelaAtendimento:
-    def __init__(self, controladorAtendimento, controladorClinica, controladorPaciente, controladorProfissional):
-        self.__controladorAtendimento = (controladorAtendimento)
-        self.__controladorClinica = (controladorClinica)
-        self.__controladorPaciente = (controladorPaciente)
-        self.__controladorProfissional = (controladorProfissional)
-
     def tela_opcoes(self):
         print("\n========== ATENDIMENTOS ==========")
         print("1 - Cadastrar atendimento")
         print("2 - Listar atendimentos")
         print("3 - Editar atendimento")
         print("4 - Remover atendimento")
+        print("5 - Listar procedimentos")
+        print("6 - Editar procedimento")
+        print("7 - Remover procedimento")
+        print("8 - Adicionar procedimento a um atendimento")
         print("0 - Voltar")
         print("==================================")
 
@@ -24,10 +22,16 @@ class TelaAtendimento:
     def mostra_mensagem(self, mensagem):
         print(mensagem)
 
-    def escolher_clinica(self):
+    def pergunta_editar_procedimento(self):
+        while True:
+            resposta = input(
+                "Deseja editar também um procedimento deste atendimento? (s/n): "
+            ).strip().lower()
+            if resposta in ("s", "n"):
+                return resposta == "s"
+            print("Responda 's' para sim ou 'n' para não.")
 
-        clinicas = self.__controladorClinica.clinicas
-
+    def escolher_clinica(self, clinicas):
         if not clinicas:
             print("Nenhuma clínica cadastrada.")
             return None
@@ -48,9 +52,7 @@ class TelaAtendimento:
             except ValueError:
                 print("Digite um número válido.")
 
-    def escolher_paciente(self):
-        pacientes = self.__controladorPaciente.pacientes
-
+    def escolher_paciente(self, pacientes):
         if not pacientes:
             print("Nenhum paciente cadastrado.")
             return None
@@ -68,11 +70,7 @@ class TelaAtendimento:
             except ValueError:
                 print("Digite um número válido.")
 
-    def escolher_profissional(self):
-        profissionais = self.__controladorProfissional.profissionais
-
-        profissionais = (self.__controladorProfissional.profissionais)
-
+    def escolher_profissional(self, profissionais):
         if not profissionais:
             print("Nenhum profissional cadastrado.")
             return None
@@ -93,23 +91,21 @@ class TelaAtendimento:
             except ValueError:
                 print("Digite um número válido.")
 
-    def escolher_tipo_atendimento(self):
+    def escolher_tipo_atendimento(self, tipos):
         print("\nTipos de atendimento:")
-        print("1 - Consulta (R$ 100,00)")
-        print("2 - Exame (R$ 150,00)")
-        print("3 - Retorno (R$ 70,00)")
-        print("4 - Outro (R$ 120,00)")
-
-        tipos = {
-            "1": "Consulta",
-            "2": "Exame",
-            "3": "Retorno",
-            "4": "Outro",
-        }
+        if not tipos:
+            print("Nenhum tipo de atendimento cadastrado.")
+            return None
+        for indice, tipo in enumerate(tipos, start=1):
+            print(f"{indice} - {tipo.nome} (R$ {tipo.valor:.2f})")
         while True:
-            tipo = tipos.get(input("Escolha o tipo de atendimento: ").strip())
-            if tipo is not None:
-                return tipo
+            try:
+                escolha = int(input("Escolha o tipo de atendimento: "))
+            except ValueError:
+                print("Digite um número válido.")
+                continue
+            if 1 <= escolha <= len(tipos):
+                return tipos[escolha - 1].nome
             print("Opção inválida. Escolha um tipo válido.")
 
     def informar_data(self):
@@ -142,40 +138,31 @@ class TelaAtendimento:
             except ValueError:
                 print("Horário inválido. Use o formato HH:MM.")
 
-    def pega_dados_atendimento(self):
-        clinica = self.escolher_clinica()
+    def pega_dados_atendimento(
+        self,
+        clinicas,
+        pacientes,
+        profissionais,
+        tipos,
+    ):
+        clinica = self.escolher_clinica(clinicas)
         if clinica is None:
             return None
 
-        paciente = self.escolher_paciente()
+        paciente = self.escolher_paciente(pacientes)
         if paciente is None:
             return None
 
-        profissional = self.escolher_profissional()
+        profissional = self.escolher_profissional(profissionais)
         if profissional is None:
             return None
 
-        tipo_atendimento = self.escolher_tipo_atendimento()
+        tipo_atendimento = self.escolher_tipo_atendimento(tipos)
+        if tipo_atendimento is None:
+            return None
         data = self.informar_data()
-
-        while True:
-            horario_inicio = self.informar_horario_inicio()
-            horario_fim = self.informar_horario_fim()
-
-            if horario_fim <= horario_inicio:
-                print("Erro: O horário final deve ser maior que o horário inicial.")
-                continue
-
-            if not self.__controladorAtendimento.horario_dentro_da_clinica(
-                clinica, horario_inicio, horario_fim
-            ):
-                print(
-                    "Erro: o atendimento deve estar dentro do horário da clínica "
-                    f"({clinica.horario_funcionamento_inicial}h às "
-                    f"{clinica.horario_funcionamento_final}h)."
-                )
-                continue
-            break
+        horario_inicio = self.informar_horario_inicio()
+        horario_fim = self.informar_horario_fim()
 
         return {
             "clinica": clinica,

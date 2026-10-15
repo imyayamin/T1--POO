@@ -1,3 +1,6 @@
+import math
+from datetime import date
+
 from entidade.pagamentoCartao import PagamentoCartao
 from entidade.pagamentoDinheiro import PagamentoDinheiro
 from entidade.pagamentoPix import PagamentoPix
@@ -40,8 +43,20 @@ class ControladorPagamento:
         if atendimento not in self.__controladorGeral.controlador_atendimento.atendimentos:
             return "Atendimento não cadastrado."
 
+        if paciente is not atendimento.paciente:
+            return "O paciente informado não corresponde ao atendimento."
+        if not isinstance(data_pagamento, date):
+            return "Data de pagamento inválida."
+        try:
+            valor_pago = float(valor_pago)
+        except (TypeError, ValueError):
+            return "O valor do pagamento deve ser numérico."
+        if not math.isfinite(valor_pago) or valor_pago <= 0:
+            return "O valor do pagamento deve ser maior que zero."
         if atendimento.calcular_valor_restante() <= 0:
             return "O atendimento já foi totalmente pago."
+        if valor_pago > atendimento.calcular_valor_restante():
+            return "O pagamento não pode ser maior que o valor restante."
 
         match tipo:
 
@@ -49,9 +64,17 @@ class ControladorPagamento:
                 return self.__realizar_pagamento_dinheiro(data_pagamento, atendimento, paciente, valor_pago)
 
             case "2":
+                if not isinstance(cpf_pagador, str):
+                    return "CPF do pagador inválido."
                 return self.__realizar_pagamento_pix(data_pagamento, atendimento, paciente, valor_pago, cpf_pagador)
 
             case "3":
+                if not isinstance(numero_cartao, str):
+                    return "Número do cartão inválido."
+                if not isinstance(bandeira, str):
+                    return "Bandeira do cartão inválida."
+                if not isinstance(parcelas, int) or not 1 <= parcelas <= 3:
+                    return "A quantidade de parcelas deve estar entre 1 e 3."
                 return self.__realizar_pagamento_cartao(
                     data_pagamento,
                     atendimento,

@@ -31,7 +31,13 @@ class ControladorClinica:
             horario_final = dados_clinica["horario_final"]
             nome = dados_clinica["nome"]
 
-            if horario_inicial >= horario_final:
+            if (
+                not isinstance(horario_inicial, int)
+                or not isinstance(horario_final, int)
+                or not 0 <= horario_inicial <= 23
+                or not 1 <= horario_final <= 24
+                or horario_inicial >= horario_final
+            ):
                 raise HorarioInvalidoException()
 
             if self.pega_clinica_por_nome(nome) is not None:
@@ -74,26 +80,36 @@ class ControladorClinica:
             if clinica is None:
                 raise ClinicaNaoEncontradaException(nome)
 
+            if any(
+                atendimento.clinica is clinica
+                for atendimento in self.__controladorGeral.controlador_atendimento.atendimentos
+            ):
+                self.__tela_clinica.mostra_mensagem(
+                    "Não é possível remover uma clínica vinculada a atendimentos."
+                )
+                return
             self.__clinicas.remove(clinica)
             self.__tela_clinica.mostra_mensagem("Clínica removida com sucesso!")
         except ClinicaNaoEncontradaException as e:
             self.__tela_clinica.mostra_mensagem(str(e))
-
-    def retornar(self):
-        self.__controladorGeral.abre_tela()
 
     def abre_tela(self):
         lista_opcoes = {
             1: self.listar_clinicas,
             2: self.incluir_clinica,
             3: self.remover_clinica,
-            0: self.retornar,
         }
         while True:
             opcao = self.__tela_clinica.tela_opcoes()
+            if opcao == 0:
+                return
             funcao = lista_opcoes.get(opcao)
             if funcao is None:
-                self.__tela_clinica.mostra_mensagem("Opção inválida.")
+                self.__tela_clinica.mostra_mensagem(
+                    "Digite uma opção válida."
+                    if opcao is not None
+                    else "Digite uma opção numérica."
+                )
                 continue
             
             try:

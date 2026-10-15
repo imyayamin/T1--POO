@@ -126,6 +126,8 @@ class Atendimento:
 
     def registrar_pagamento(self, pagamento):
 
+        if pagamento is None:
+            return "Pagamento inválido."
         if pagamento.atendimento != self:
             return "Pagamento não pertence a este atendimento!"
 

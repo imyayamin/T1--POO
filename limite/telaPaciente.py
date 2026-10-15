@@ -7,12 +7,14 @@ class TelaPaciente:
         print("1 - Listar pacientes")
         print("2 - Cadastrar paciente")
         print("3 - Remover paciente")
+        print("4 - Alterar paciente")
         print("0 - Retornar")
         print("==============================")
         try:
             return int(input("Escolha uma opção: "))
         except ValueError:
             print("Entrada inválida. Digite um número inteiro.")
+            return None
 
     def pega_dados_paciente(self):
         print("-------- DADOS PACIENTE ----------")
@@ -58,11 +60,7 @@ class TelaPaciente:
 
     def pega_dados_acompanhante(self):
         print("-------- DADOS ACOMPANHANTE ----------")
-        try:
-            nome = str(input("Nome do acompanhante: "))
-        except ValueError:
-            print("Entrada inválida. Digite um nome válido.")
-        return nome
+        return input("Nome do acompanhante: ").strip()
 
     def seleciona_paciente(self):
         cpf = re.sub(r"\D", "", input("CPF do paciente (11 dígitos): ").strip())

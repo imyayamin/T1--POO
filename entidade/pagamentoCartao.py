@@ -46,7 +46,7 @@ class PagamentoCartao(Pagamento):
         if self.__bandeira not in ["visa", "mastercard", "elo"]:
             return False
 
-        if self.__parcela < 1 or self.__parcela > 3:
+        if not isinstance(self.__parcela, int) or not 1 <= self.__parcela <= 3:
             return False
 
         return True

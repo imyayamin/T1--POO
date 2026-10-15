@@ -5,6 +5,7 @@ from controle.controladorAtendimento import ControladorAtendimento
 from controle.controladorPagamento import ControladorPagamento
 from controle.controladorProcedimento import ControladorProcedimento
 from controle.controladorRelatorio import ControladorRelatorio
+from controle.controladorTipoAtendimento import ControladorTipoAtendimento
 from limite.telaGeral import TelaGeral
 
 class ControladorGeral:
@@ -13,7 +14,14 @@ class ControladorGeral:
         self.__controladorPaciente = ControladorPaciente(self)
         self.__controladorProfissional = ControladorProfissional(self)
         self.__controladorClinica = ControladorClinica(self)
-        self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorPaciente, self.__controladorProfissional)
+        self.__controladorTipoAtendimento = ControladorTipoAtendimento(self)
+        self.__controladorAtendimento = ControladorAtendimento(
+            self,
+            self.__controladorClinica,
+            self.__controladorPaciente,
+            self.__controladorProfissional,
+            self.__controladorTipoAtendimento,
+        )
         self.__controladorPagamento = ControladorPagamento(self)
         self.__controladorProcedimento = ControladorProcedimento(
             self,
@@ -48,6 +56,10 @@ class ControladorGeral:
         return self.__controladorPagamento
 
     @property
+    def controlador_tipo_atendimento(self):
+        return self.__controladorTipoAtendimento
+
+    @property
     def controlador_procedimento(self):
         return self.__controladorProcedimento
 
@@ -69,6 +81,9 @@ class ControladorGeral:
     def cadastra_pagamento(self):
         self.__controladorPagamento.abre_tela()
 
+    def cadastra_tipo_atendimento(self):
+        self.__controladorTipoAtendimento.abre_tela()
+
     def encerra_sistema(self):
         exit(0)
 
@@ -80,6 +95,7 @@ class ControladorGeral:
             4: self.cadastra_atendimento,
             5: self.cadastra_pagamento,
             6: self.__controladorRelatorio.abre_tela,
+            7: self.cadastra_tipo_atendimento,
             0: self.encerra_sistema
         }
 
