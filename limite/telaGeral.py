@@ -8,7 +8,6 @@ class TelaGeral:
         print("4 - Atendimentos")
         print("5 - Registrar pagamento")
         print("6 - Relatórios")
-        print("7 - Registrar procedimento")
         print("0 - Sair")
         print("==============================")
 

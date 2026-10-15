@@ -95,16 +95,22 @@ class TelaAtendimento:
 
     def escolher_tipo_atendimento(self):
         print("\nTipos de atendimento:")
-        print("1 - Consulta")
-        print("2 - Exame")
-        print("3 - Retorno")
-        print("4 - Outro")
+        print("1 - Consulta (R$ 100,00)")
+        print("2 - Exame (R$ 150,00)")
+        print("3 - Retorno (R$ 70,00)")
+        print("4 - Outro (R$ 120,00)")
 
-        tipos = {"1": "Consulta", "2": "Exame", "3": "Retorno", "4": "Outro"}
-        tipo = tipos.get(input("Escolha o tipo de atendimento: ").strip())
-        if tipo is None:
+        tipos = {
+            "1": "Consulta",
+            "2": "Exame",
+            "3": "Retorno",
+            "4": "Outro",
+        }
+        while True:
+            tipo = tipos.get(input("Escolha o tipo de atendimento: ").strip())
+            if tipo is not None:
+                return tipo
             print("Opção inválida. Escolha um tipo válido.")
-        return tipo
 
     def informar_data(self):
         while True:
@@ -149,6 +155,7 @@ class TelaAtendimento:
         if profissional is None:
             return None
 
+        tipo_atendimento = self.escolher_tipo_atendimento()
         data = self.informar_data()
 
         while True:
@@ -170,18 +177,14 @@ class TelaAtendimento:
                 continue
             break
 
-        tipo_atendimento = self.escolher_tipo_atendimento()
-        while tipo_atendimento is None:
-            tipo_atendimento = self.escolher_tipo_atendimento()
-
         return {
             "clinica": clinica,
             "paciente": paciente,
             "profissional": profissional,
+            "tipo_atendimento": tipo_atendimento,
             "data": data,
             "horario_inicio": horario_inicio,
             "horario_fim": horario_fim,
-            "tipo_atendimento": tipo_atendimento,
         }
 
     def lista_atendimentos(self, atendimentos):
@@ -199,7 +202,9 @@ class TelaAtendimento:
                 f"Profissional: {atendimento.profissional.nome} | "
                 f"Clínica: {atendimento.clinica.nome} | "
                 f"Tipo: {atendimento.tipoAtendimento} | "
-                f"Valor: R$ {atendimento.valor:.2f}"
+                f"Procedimento(s): "
+                f"{', '.join(procedimento.descricao for procedimento in atendimento.procedimentos)} | "
+                f"Valor: R$ {atendimento.valor_total():.2f}"
             )
 
     def seleciona_atendimento(self, atendimentos):

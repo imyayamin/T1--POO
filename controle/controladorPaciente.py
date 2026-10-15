@@ -32,14 +32,20 @@ class ControladorPaciente:
         idade = dados["idade"]
 
         try:
-            if idade < 0:
-                raise ValueError("A idade do paciente deve ser não negativa.")
+            celular = "".join(caractere for caractere in str(celular) if caractere.isdigit())
+            cpf = "".join(caractere for caractere in str(cpf) if caractere.isdigit())
+            if len(celular) not in (10, 11):
+                raise ValueError("O telefone deve conter DDD e 10 ou 11 dígitos.")
+            if len(cpf) != 11:
+                raise ValueError("O CPF deve conter 11 dígitos.")
+            if not isinstance(idade, int) or not 0 <= idade <= 120:
+                raise ValueError("A idade deve estar entre 0 e 120 anos.")
 
             if self.pega_paciente_por_cpf(cpf) is not None:
                 raise PacienteRepetidoException(cpf)
 
             acompanhante = None
-            if 0 <= idade < 18:
+            if idade < 18:
                 self.__tela_paciente.mostra_mensagem(
                     "Paciente menor de idade. Informe o acompanhante:"
                 )

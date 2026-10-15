@@ -69,9 +69,6 @@ class ControladorGeral:
     def cadastra_pagamento(self):
         self.__controladorPagamento.abre_tela()
 
-    def cadastra_procedimento(self):
-        self.__controladorProcedimento.abre_tela()
-
     def encerra_sistema(self):
         exit(0)
 
@@ -83,7 +80,6 @@ class ControladorGeral:
             4: self.cadastra_atendimento,
             5: self.cadastra_pagamento,
             6: self.__controladorRelatorio.abre_tela,
-            7: self.cadastra_procedimento,
             0: self.encerra_sistema
         }
 

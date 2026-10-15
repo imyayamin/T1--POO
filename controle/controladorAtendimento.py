@@ -66,6 +66,9 @@ class ControladorAtendimento:
             return mensagem_validacao
 
         valor = self.obter_valor_atendimento(tipo_atendimento)
+        if valor is None:
+            return "Tipo de atendimento inválido!"
+
         novo = Atendimento(
             clinica,
             paciente,
@@ -125,6 +128,21 @@ class ControladorAtendimento:
             return
 
         resultado = self.agendar_atendimento(**dados)
+        if resultado == "Atendimento agendado com sucesso!":
+            atendimento = self.__atendimentos[-1]
+            procedimento_registrado = (
+                self.__controladorGeral.controlador_procedimento.abre_tela(
+                    atendimento
+                )
+            )
+            if not procedimento_registrado:
+                self.__atendimentos.remove(atendimento)
+                self.__tela_atendimento.mostra_mensagem(
+                    "Atendimento cancelado porque não foi possível registrar "
+                    "o procedimento obrigatório."
+                )
+                return
+
         self.__tela_atendimento.mostra_mensagem(resultado)
 
     def listar_atendimentos(self):
@@ -160,6 +178,8 @@ class ControladorAtendimento:
         atendimento.clinica = dados["clinica"]
         atendimento.paciente = dados["paciente"]
         atendimento.profissional = dados["profissional"]
+        for procedimento in atendimento.procedimentos:
+            procedimento.profissional = dados["profissional"]
         atendimento.data = dados["data"]
         atendimento.horario_inicio = dados["horario_inicio"]
         atendimento.horario_fim = dados["horario_fim"]

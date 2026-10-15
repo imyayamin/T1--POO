@@ -113,7 +113,6 @@ class Atendimento:
         )
 
     def valor_total(self):
-
         return self.__valor + self.valor_total_procedimentos()
 
     def calcular_valor_restante(self):

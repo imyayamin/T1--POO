@@ -22,7 +22,13 @@ class TelaPagamento:
             return None
 
     def pega_dados_pagamento(self, atendimentos):
-        atendimento = self.seleciona_atendimento(atendimentos)
+        atendimentos_pendentes = [
+            atendimento
+            for atendimento in atendimentos
+            if atendimento.procedimentos
+            and atendimento.calcular_valor_restante() > 0
+        ]
+        atendimento = self.seleciona_atendimento(atendimentos_pendentes)
         if atendimento is None:
             return None
 
@@ -31,13 +37,22 @@ class TelaPagamento:
         if tipo is None:
             return None
 
+        valor_procedimentos = atendimento.valor_total_procedimentos()
+        valor_a_pagar = min(
+            valor_procedimentos,
+            atendimento.calcular_valor_restante(),
+        )
         dados = {
             "tipo": tipo,
             "data_pagamento": data_pagamento,
             "atendimento": atendimento,
             "paciente": atendimento.paciente,
-            "valor_pago": self.informar_valor(),
+            "valor_pago": valor_a_pagar,
         }
+        self.mostrar_mensagem(
+            f"Valor a pagar pelo(s) procedimento(s): "
+            f"R$ {dados['valor_pago']:.2f}"
+        )
 
         if tipo == "2":
             dados["cpf_pagador"] = self.informar_cpf()
@@ -58,8 +73,10 @@ class TelaPagamento:
             print(
                 f"{indice} - {atendimento.data.isoformat()} "
                 f"{atendimento.horario_inicio.strftime('%H:%M')} | "
-                f"{atendimento.paciente.nome} | "
-                f"Saldo: R$ {atendimento.calcular_valor_restante():.2f}"
+                f"{atendimento.paciente.nome} | Procedimento(s): "
+                f"{', '.join(procedimento.descricao for procedimento in atendimento.procedimentos)} | "
+                f"Valor do(s) procedimento(s): "
+                f"R$ {atendimento.valor_total_procedimentos():.2f}"
             )
 
         while True:

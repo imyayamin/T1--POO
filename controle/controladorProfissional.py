@@ -14,7 +14,7 @@ class ControladorProfissional:
     def profissionais(self):
         return self.__profissionais
 
-    def pega_profissional_por_cpf(self, cpf: int):
+    def pega_profissional_por_cpf(self, cpf: str):
         for profissional in self.__profissionais:
             if profissional.cpf == cpf:
                 return profissional
@@ -22,6 +22,37 @@ class ControladorProfissional:
 
     def incluir_profissional(self):
         dados_profissional = self.__tela_profissional.pega_dados_profissional()
+        celular = "".join(
+            caractere
+            for caractere in str(dados_profissional["celular"])
+            if caractere.isdigit()
+        )
+        cpf = "".join(
+            caractere
+            for caractere in str(dados_profissional["cpf"])
+            if caractere.isdigit()
+        )
+        registro = str(dados_profissional["registro_profissional"]).strip()
+
+        if len(celular) not in (10, 11):
+            self.__tela_profissional.mostra_mensagem(
+                "O telefone deve conter DDD e 10 ou 11 dígitos."
+            )
+            return
+        if len(cpf) != 11:
+            self.__tela_profissional.mostra_mensagem(
+                "O CPF deve conter 11 dígitos."
+            )
+            return
+        if not registro.isdigit():
+            self.__tela_profissional.mostra_mensagem(
+                "O registro profissional deve conter apenas números."
+            )
+            return
+
+        dados_profissional["celular"] = celular
+        dados_profissional["cpf"] = cpf
+        dados_profissional["registro_profissional"] = registro
         p = self.pega_profissional_por_cpf(dados_profissional["cpf"])
 
         try:
@@ -48,12 +79,21 @@ class ControladorProfissional:
         try:
             if(profissional is not None):
                 novos_dados_profissional = self.__tela_profissional.pega_dados_profissional()
+                cpf_existente = self.pega_profissional_por_cpf(
+                    novos_dados_profissional["cpf"]
+                )
+                if cpf_existente is not None and cpf_existente is not profissional:
+                    self.__tela_profissional.mostra_mensagem(
+                        "Já existe um profissional cadastrado com esse CPF."
+                    )
+                    return
+
                 profissional.nome = novos_dados_profissional["nome"]
                 profissional.celular = novos_dados_profissional["celular"]
                 profissional.cpf = novos_dados_profissional["cpf"]
                 profissional.especialidade = novos_dados_profissional["especialidade"]
                 profissional.registro_profissional = novos_dados_profissional["registro_profissional"]
-                self.profissionais()
+                self.lista_profissionais()
         except ProfissionalNaoEncontradoException as e:
             self.__tela_profissional.mostra_mensagem(e)
 
