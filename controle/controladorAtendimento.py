@@ -29,7 +29,7 @@ class ControladorAtendimento:
             2: self.listar_atendimentos,
             3: self.editar_atendimento,
             4: self.remover_atendimento,
-            5: self.listar_procedimentos_e_catalogo,
+            5: self.listar_procedimentos,
             6: self.__controladorGeral.controlador_procedimento.editar_procedimento_menu,
             7: self.__controladorGeral.controlador_procedimento.remover_procedimento,
             8: self.__controladorGeral.controlador_procedimento.adicionar_procedimento_menu,
@@ -47,7 +47,7 @@ class ControladorAtendimento:
 
             funcao_escolhida()
 
-    def listar_procedimentos_e_catalogo(self):
+    def listar_procedimentos(self):
         self.__controladorGeral.controlador_procedimento.listar_procedimentos()
         self.__controladorGeral.controlador_tipo_procedimento.listar_tipos()
 
