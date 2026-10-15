@@ -1,6 +1,6 @@
-from paciente import Paciente
-from profissional import Profissional
-from clinica import Clinica
+from .paciente import Paciente
+from .profissional import Profissional
+from .clinica import Clinica
 from datetime import date, time
 
 class Atendimento:

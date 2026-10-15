@@ -1,7 +1,7 @@
 from entidade.atendimento import Atendimento
-from controladorAtendimento import ControladorClinica
-from controladorPaciente import ControladorPaciente
-from controladorProfissional import ControladorProfissional
+from .controladorClinica import ControladorClinica
+from .controladorPaciente import ControladorPaciente
+from .controladorProfissional import ControladorProfissional
 
 class ControladorAtendimento:
     def __init__(self, controladorClinica: ControladorClinica, controladorPaciente: ControladorPaciente, controladorProfissional: ControladorProfissional, controladorAcompanhante: ControladorProfissional):
@@ -13,6 +13,8 @@ class ControladorAtendimento:
     @property
     def atendimentos(self):
         return self.__atendimentos
+
+    
 
     def agendar_atendimento(self, clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, acompanhante=None):
 

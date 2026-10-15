@@ -3,6 +3,8 @@ from entidade.pagamentoDinheiro import PagamentoDinheiro
 from entidade.pagamentoPix import PagamentoPix
 
 class ControladorPagamento:
+    def __init__(self, controladorgeral):
+        self.__controladorgeral = controladorgeral
 
     def realizar_pagamento(self, tipo, data_pagamento, atendimento, paciente, valor_pago=None, cpf_pagador=None, numero_cartao=None, bandeira=None, parcelas=None):
 

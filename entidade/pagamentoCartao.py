@@ -1,4 +1,4 @@
-from abstractPagamento import Pagamento
+from .abstractPagamento import Pagamento
 
 class PagamentoCartao(Pagamento):
 

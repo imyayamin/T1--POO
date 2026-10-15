@@ -1,4 +1,4 @@
-from profissional import Profissional
+from .profissional import Profissional
 
 class Procedimento:
 

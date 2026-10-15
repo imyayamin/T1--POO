@@ -6,7 +6,38 @@ class TelaAtendimento:
         self.__controladorClinica = (controladorClinica)
         self.__controladorPaciente = (controladorPaciente)
         self.__controladorProfissional = (controladorProfissional)
-        self.__controladorAcompanhante = (controladorAcompanhante)
+
+    def tela_opcoes(self):
+        print("\n========== ATENDIMENTOS ==========")
+        print("1 - Listar atendimentos")
+        print("2 - Agendar atendimento")
+        print("3 - Remover atendimento")
+        print("0 - Voltar")
+        print("==================================")
+        
+        try:
+            return int(input("Escolha uma opção: "))
+        except ValueError:
+            return None
+
+    def abre_tela(self):
+        lista_opcoes = {
+            1: self.__controladorAtendimento.listar_atendimentos,
+            2: self.agendar_atendimento,
+            3: self.__controladorAtendimento.remover_atendimento,
+            0: self.__controladorAtendimento.retornar,
+        }
+        while True:
+            opcao = self.tela_opcoes()
+            funcao = lista_opcoes.get(opcao)
+            if funcao is None:
+                self.mostra_mensagem("Opção inválida.")
+                continue
+            
+            try:
+                funcao()
+            except Exception as e:
+                self.mostra_mensagem(str(e))
 
     def escolher_clinica(self):
 
@@ -81,33 +112,6 @@ class TelaAtendimento:
 
                 if 1 <= opcao <= len(profissionais):
                     return profissionais[opcao - 1]
-
-                print("Opção inválida.")
-
-            except ValueError:
-
-                print("Digite um número válido.")
-
-    def escolher_acompanhante(self):
-
-        acompanhantes = (self.__controladorAcompanhante.acompanhantes)
-
-        if not acompanhantes:
-            print("Nenhum acompanhante cadastrado.")
-            return None
-
-        print("\nAcompanhantes cadastrados:")
-
-        for i, acompanhante in enumerate(acompanhantes, start=1):
-            print(f"{i} - {acompanhante.nome}")
-
-        while True:
-
-            try:
-                opcao = int(input("Escolha o acompanhante: "))
-
-                if 1 <= opcao <= len(acompanhantes):
-                    return acompanhantes[opcao - 1]
 
                 print("Opção inválida.")
 
@@ -203,17 +207,6 @@ class TelaAtendimento:
         if tipoAtendimento is None:
             return "Tipo de atendimento inválido!"
 
-        acompanhante = None
-
-        if paciente.idade < 18:
-
-            while acompanhante is None:
-
-                acompanhante = (self.escolher_acompanhante())
-
-                if acompanhante is None:
-                    print("Você precisa escolher um acompanhante.")
-
-        resultado = (self.__controladorAtendimento.agendar_atendimento(clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento, acompanhante))
+        resultado = (self.__controladorAtendimento.agendar_atendimento(clinica, paciente, profissional, data, horario_inicio, horario_fim, tipoAtendimento ))
 
         return resultado

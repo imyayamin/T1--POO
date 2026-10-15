@@ -1,6 +1,6 @@
 from entidade.paciente import Paciente
 from limite.telaPaciente import TelaPaciente
-from exceptions.exceptions import (AcompanhanteObrigatorioException, PacienteRepetidoException, EntradaInvalidaException, ListaVaziaException)
+from exceptions.exceptions import (AcompanhanteObrigatorioException, PacienteRepetidoException, PacienteNaoEncontradoException, EntradaInvalidaException, ListaVaziaException)
 
 class ControladorPaciente:
 
@@ -19,41 +19,38 @@ class ControladorPaciente:
                 return paciente
         return None
 
-    def cadastrar_paciente(self, nome, celular, cpf, idade, acompanhante=None):
-        if idade < 0:
-            raise ValueError("A idade do paciente deve ser não negativa.")
-
-        if self.pega_paciente_por_cpf(cpf) is not None:
-            raise PacienteRepetidoException(cpf)
-
-        if idade < 18 and not acompanhante:
-            raise AcompanhanteObrigatorioException()
-
-        novo_paciente = Paciente(nome, celular, cpf, idade, acompanhante)
-        self.__pacientes.append(novo_paciente)
-        return "Paciente cadastrado com sucesso!"
-
-    def incluir_paciente(self):
+    def cadastrar_paciente(self):
         try:
             dados = self.__tela_paciente.pega_dados_paciente()
         except EntradaInvalidaException as e:
             self.__tela_paciente.mostra_mensagem(str(e))
             return
 
-        acompanhante = None
-        if 0 <= dados["idade"] < 18:
-            self.__tela_paciente.mostra_mensagem("Paciente menor de idade. Informe o acompanhante:")
-            acompanhante = self.__tela_paciente.pega_acompanhante()
+        nome = dados["nome"]
+        celular = dados["celular"]
+        cpf = dados["cpf"]
+        idade = dados["idade"]
 
         try:
-            resultado = self.cadastrar_paciente(
-                dados["nome"],
-                dados["celular"],
-                dados["cpf"],
-                dados["idade"],
-                acompanhante,
-            )
-            self.__tela_paciente.mostra_mensagem(resultado)
+            if idade < 0:
+                raise ValueError("A idade do paciente deve ser não negativa.")
+
+            if self.pega_paciente_por_cpf(cpf) is not None:
+                raise PacienteRepetidoException(cpf)
+
+            acompanhante = None
+            if 0 <= idade < 18:
+                self.__tela_paciente.mostra_mensagem(
+                    "Paciente menor de idade. Informe o acompanhante:"
+                )
+                acompanhante = self.__tela_paciente.pega_acompanhante()
+                if not acompanhante:
+                    raise AcompanhanteObrigatorioException()
+
+            novo_paciente = Paciente(nome, celular, cpf, idade, acompanhante)
+            self.__pacientes.append(novo_paciente)
+            self.__tela_paciente.mostra_mensagem("Paciente cadastrado com sucesso!")
+
         except (ValueError, PacienteRepetidoException, AcompanhanteObrigatorioException) as e:
             self.__tela_paciente.mostra_mensagem(str(e))
 
@@ -64,20 +61,26 @@ class ControladorPaciente:
         return self.__pacientes
 
     def remover_paciente(self):
-        self.listar_pacientes()
+        try:
+            self.listar_pacientes()
+        except ListaVaziaException as e:
+            self.__tela_paciente.mostra_mensagem(str(e))
+            return
+        
         try:
             cpf = self.__tela_paciente.seleciona_paciente()
         except EntradaInvalidaException as e:
             self.__tela_paciente.mostra_mensagem(str(e))
             return
 
-        paciente = self.pega_paciente_por_cpf(cpf)
-        if paciente is None:
-            self.__tela_paciente.mostra_mensagem("Paciente não encontrado.")
-            return
-
-        self.__pacientes.remove(paciente)
-        self.__tela_paciente.mostra_mensagem("Paciente removido com sucesso!")
+        try:
+            paciente = self.pega_paciente_por_cpf(cpf)
+            if paciente is None:
+                raise PacienteNaoEncontradoException(cpf)
+            self.__pacientes.remove(paciente)
+            self.__tela_paciente.mostra_mensagem("Paciente removido com sucesso!")
+        except PacienteNaoEncontradoException as e:
+            self.__tela_paciente.mostra_mensagem(str(e))
 
     def retornar(self):
         self.__controladorgeral.abre_tela()
@@ -85,7 +88,7 @@ class ControladorPaciente:
     def abre_tela(self):
         lista_opcoes = {
             1: self.listar_pacientes,
-            2: self.incluir_paciente,
+            2: self.cadastrar_paciente,
             3: self.remover_paciente,
             0: self.retornar,
         }
@@ -95,4 +98,7 @@ class ControladorPaciente:
             if funcao is None:
                 self.__tela_paciente.mostra_mensagem("Opção inválida.")
                 continue
-            funcao()
+            try:
+                funcao()
+            except ListaVaziaException as e:
+                self.__tela_paciente.mostra_mensagem(str(e))

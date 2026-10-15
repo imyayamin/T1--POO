@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from datetime import date
 
-from atendimento import Atendimento
-from paciente import Paciente
+from .atendimento import Atendimento
+from .paciente import Paciente
 
 class Pagamento(ABC):
 

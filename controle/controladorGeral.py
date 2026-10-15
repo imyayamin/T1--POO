@@ -13,7 +13,7 @@ class ControladorGeral:
         self.__controladorProfissional = ControladorProfissional(self)
         self.__controladorClinica = ControladorClinica(self)
 
-        self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorAcompanhante, self.__controladorProfissional, self.__controladorAcompanhante)
+        self.__controladorAtendimento = ControladorAtendimento(self, self.__controladorClinica, self.__controladorPaciente, self.__controladorProfissional)
         self.__controladorPagamento = ControladorPagamento(self)
         self.__controladorProcedimento = ControladorProcedimento(self, self.__controladorAtendimento, self.__controladorProfissional)
         self.__telaGeral = TelaGeral()

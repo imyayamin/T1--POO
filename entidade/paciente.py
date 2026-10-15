@@ -1,4 +1,4 @@
-from entidade.pessoa import Pessoa
+from .pessoa import Pessoa
 
 class Paciente(Pessoa):
 
