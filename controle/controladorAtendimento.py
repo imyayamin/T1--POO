@@ -58,7 +58,7 @@ class ControladorAtendimento:
 
         return "Atendimento agendado com sucesso!"
 
-    def __obter_valor_atendimento(self, tipoAtendimento):
+    def __obter_valor_atendimento(self, tipoAtendimento): #nao deveria ser publico?
 
         valores = {
             "Consulta": 100,

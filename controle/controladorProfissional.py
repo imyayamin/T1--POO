@@ -5,10 +5,10 @@ from exceptions.exceptions import (ProfissionalRepetidoException, ProfissionalNa
 
 class ControladorProfissional:
 
-    def __init__(self, controlador_sistema):
+    def __init__(self, controladorgeral):
         self.__profissionais = []
         self.__tela_profissional = TelaProfissional()
-        self.__controlador_sistema = controlador_sistema
+        self.__controladorgeral = controladorgeral
 
     @property
     def profissionais(self):
@@ -78,7 +78,7 @@ class ControladorProfissional:
             self.__tela_profissional.mostra_mensagem(e)
 
     def retornar(self):
-        self.__controlador_sistema.abre_tela()
+        self.__controladorgeral.abre_tela()
 
     def abre_tela(self):
         lista_opcoes = {
