@@ -48,7 +48,7 @@ class ControladorAtendimento:
             if conflito:
                 return "Horário não disponível!"
 
-        valor = self.__obter_valor_atendimento(tipoAtendimento)
+        valor = self.obter_valor_atendimento(tipoAtendimento)
         if valor is None:
             return "Tipo de atendimento inválido!"
         
@@ -58,7 +58,7 @@ class ControladorAtendimento:
 
         return "Atendimento agendado com sucesso!"
 
-    def __obter_valor_atendimento(self, tipoAtendimento): #nao deveria ser publico?
+    def obter_valor_atendimento(self, tipoAtendimento): 
 
         valores = {
             "Consulta": 100,
