@@ -1,4 +1,9 @@
 from entidade.atendimento import Atendimento
+from exceptions.exceptions import (
+    AtendimentoConflitanteException,
+    DescricaoProcedimentoVaziaException,
+    ValorProcedimentoInvalidoException,
+)
 from limite.telaAtendimento import TelaAtendimento
 from datetime import time
 
@@ -82,15 +87,18 @@ class ControladorAtendimento:
         self, clinica, paciente, profissional, data,
         horario_inicio, horario_fim, tipo_atendimento
     ):
-        mensagem_validacao = self.validar_atendimento(
-            clinica,
-            paciente,
-            profissional,
-            data,
-            horario_inicio,
-            horario_fim,
-            tipo_atendimento,
-        )
+        try:
+            mensagem_validacao = self.validar_atendimento(
+                clinica,
+                paciente,
+                profissional,
+                data,
+                horario_inicio,
+                horario_fim,
+                tipo_atendimento,
+            )
+        except AtendimentoConflitanteException as erro:
+            return str(erro)
         if mensagem_validacao is not None:
             return mensagem_validacao
 
@@ -144,7 +152,7 @@ class ControladorAtendimento:
                 and horario_fim > atendimento.horario_inicio
             )
             if conflito:
-                return "Horário não disponível!"
+                raise AtendimentoConflitanteException()
 
         if self.obter_valor_atendimento(tipo_atendimento) is None:
             return "Tipo de atendimento inválido!"
@@ -181,10 +189,14 @@ class ControladorAtendimento:
         if dados is None:
             return
 
-        mensagem_validacao = self.validar_atendimento(
-            **dados,
-            atendimento_ignorado=atendimento,
-        )
+        try:
+            mensagem_validacao = self.validar_atendimento(
+                **dados,
+                atendimento_ignorado=atendimento,
+            )
+        except AtendimentoConflitanteException as erro:
+            self.__tela_atendimento.mostra_mensagem(str(erro))
+            return
         if mensagem_validacao is not None:
             self.__tela_atendimento.mostra_mensagem(mensagem_validacao)
             return
@@ -235,17 +247,24 @@ class ControladorAtendimento:
             return
 
         if dados_procedimento is not None:
-            mensagem_edicao = (
-                self.__controladorGeral.controlador_procedimento
-                .editar_procedimento(
-                    atendimento,
-                    procedimento,
-                    descricao,
-                    custo,
-                    dados["profissional"],
-                    valor_base_novo,
+            try:
+                mensagem_edicao = (
+                    self.__controladorGeral.controlador_procedimento
+                    .editar_procedimento(
+                        atendimento,
+                        procedimento,
+                        descricao,
+                        custo,
+                        dados["profissional"],
+                        valor_base_novo,
+                    )
                 )
-            )
+            except (
+                DescricaoProcedimentoVaziaException,
+                ValorProcedimentoInvalidoException,
+            ) as erro:
+                self.__tela_atendimento.mostra_mensagem(str(erro))
+                return
             if mensagem_edicao != "Procedimento atualizado com sucesso.":
                 self.__tela_atendimento.mostra_mensagem(mensagem_edicao)
                 return

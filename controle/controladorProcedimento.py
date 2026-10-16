@@ -1,6 +1,12 @@
 import math
 
 from entidade.procedimento import Procedimento
+from exceptions.exceptions import (
+    AtendimentoNaoEncontradoException,
+    DescricaoProcedimentoVaziaException,
+    ProcedimentoInvalidoException,
+    ValorProcedimentoInvalidoException,
+)
 from limite.telaProcedimento import TelaProcedimento
 
 
@@ -26,11 +32,20 @@ class ControladorProcedimento:
         while True:
             descricao = self.__telaProcedimento.informar_descricao()
             custo = self.__telaProcedimento.informar_custo()
-            mensagem = self.registrar_procedimento(
-                atendimento,
-                descricao,
-                custo,
-            )
+            try:
+                mensagem = self.registrar_procedimento(
+                    atendimento,
+                    descricao,
+                    custo,
+                )
+            except (
+                AtendimentoNaoEncontradoException,
+                DescricaoProcedimentoVaziaException,
+                ProcedimentoInvalidoException,
+                ValorProcedimentoInvalidoException,
+            ) as erro:
+                self.__telaProcedimento.mostra_mensagem(str(erro))
+                return False
             self.__telaProcedimento.mostra_mensagem(mensagem)
             if mensagem == "Procedimento cadastrado com sucesso!":
                 return True
@@ -66,11 +81,19 @@ class ControladorProcedimento:
         if tipo is None:
             return
 
-        mensagem = self.registrar_procedimento(
-            atendimento,
-            tipo.nome,
-            tipo.valor,
-        )
+        try:
+            mensagem = self.registrar_procedimento(
+                atendimento,
+                tipo.nome,
+                tipo.valor,
+            )
+        except (
+            AtendimentoNaoEncontradoException,
+            DescricaoProcedimentoVaziaException,
+            ProcedimentoInvalidoException,
+            ValorProcedimentoInvalidoException,
+        ) as erro:
+            mensagem = str(erro)
         self.__telaProcedimento.mostra_mensagem(mensagem)
 
     def editar_procedimento_menu(self):
@@ -84,13 +107,19 @@ class ControladorProcedimento:
         procedimento, atendimento = registro
         descricao = self.__telaProcedimento.informar_descricao()
         custo = self.__telaProcedimento.informar_custo()
-        mensagem = self.editar_procedimento(
-            atendimento,
-            procedimento,
-            descricao,
-            custo,
-            atendimento.profissional,
-        )
+        try:
+            mensagem = self.editar_procedimento(
+                atendimento,
+                procedimento,
+                descricao,
+                custo,
+                atendimento.profissional,
+            )
+        except (
+            DescricaoProcedimentoVaziaException,
+            ValorProcedimentoInvalidoException,
+        ) as erro:
+            mensagem = str(erro)
         self.__telaProcedimento.mostra_mensagem(mensagem)
 
     def remover_procedimento(self):
@@ -105,10 +134,13 @@ class ControladorProcedimento:
         if not self.__telaProcedimento.confirmar_remocao():
             self.__telaProcedimento.mostra_mensagem("Remoção cancelada.")
             return
-        mensagem = self.remover_procedimento_do_atendimento(
-            atendimento,
-            procedimento,
-        )
+        try:
+            mensagem = self.remover_procedimento_do_atendimento(
+                atendimento,
+                procedimento,
+            )
+        except AtendimentoNaoEncontradoException as erro:
+            mensagem = str(erro)
         self.__telaProcedimento.mostra_mensagem(mensagem)
 
     def editar_procedimento(
@@ -123,14 +155,14 @@ class ControladorProcedimento:
         if procedimento not in atendimento.procedimentos:
             return "Procedimento não pertence a este atendimento."
         if not isinstance(descricao, str) or not descricao.strip():
-            return "A descrição do procedimento não pode ser vazia."
+            raise DescricaoProcedimentoVaziaException()
         descricao = descricao.strip()
         try:
             custo = float(custo)
         except (TypeError, ValueError):
             return "O valor do procedimento deve ser numérico."
         if not math.isfinite(custo) or custo <= 0:
-            return "O valor do procedimento deve ser maior que zero."
+            raise ValorProcedimentoInvalidoException(custo)
         if profissional not in self.__controladorProfissional.profissionais:
             return "Profissional não encontrado."
 
@@ -162,7 +194,7 @@ class ControladorProcedimento:
         procedimento,
     ):
         if atendimento not in self.__controladorAtendimento.atendimentos:
-            return "Atendimento não encontrado."
+            raise AtendimentoNaoEncontradoException()
         if procedimento not in atendimento.procedimentos:
             return "Procedimento não pertence a este atendimento."
         novo_total = atendimento.valor_total() - procedimento.custo
@@ -179,14 +211,14 @@ class ControladorProcedimento:
 
     def registrar_procedimento(self, atendimento, descricao, custo):
         if atendimento not in self.__controladorAtendimento.atendimentos:
-            return "Atendimento não encontrado."
+            raise AtendimentoNaoEncontradoException()
 
         profissional = atendimento.profissional
         if profissional not in self.__controladorProfissional.profissionais:
             return "Profissional não encontrado."
 
         if not isinstance(descricao, str) or not descricao.strip():
-            return "A descrição do procedimento não pode ser vazia."
+            raise DescricaoProcedimentoVaziaException()
         descricao = descricao.strip()
 
         try:
@@ -194,7 +226,7 @@ class ControladorProcedimento:
         except (TypeError, ValueError):
             return "O valor do procedimento deve ser numérico."
         if not math.isfinite(custo) or custo <= 0:
-            return "O valor do procedimento deve ser maior que zero."
+            raise ValorProcedimentoInvalidoException(custo)
 
         procedimento = Procedimento(descricao, custo, profissional)
         resultado = atendimento.adicionar_procedimento(procedimento)
