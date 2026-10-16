@@ -4,6 +4,12 @@ from datetime import date
 from entidade.pagamentoCartao import PagamentoCartao
 from entidade.pagamentoDinheiro import PagamentoDinheiro
 from entidade.pagamentoPix import PagamentoPix
+from exceptions.exceptions import (
+    AtendimentoJaPagoException,
+    PagamentoAcimaDoValorException,
+    PagamentoAposAtendimentoException,
+    PagamentoInvalidoException,
+)
 from limite.telaPagamento import TelaPagamento
 
 class ControladorPagamento:
@@ -53,40 +59,47 @@ class ControladorPagamento:
             return "O valor do pagamento deve ser numérico."
         if not math.isfinite(valor_pago) or valor_pago <= 0:
             return "O valor do pagamento deve ser maior que zero."
-        if atendimento.calcular_valor_restante() <= 0:
-            return "O atendimento já foi totalmente pago."
-        if valor_pago > atendimento.calcular_valor_restante():
-            return "O pagamento não pode ser maior que o valor restante."
-
-        match tipo:
-
-            case "1":
-                return self.__realizar_pagamento_dinheiro(data_pagamento, atendimento, paciente, valor_pago)
-
-            case "2":
-                if not isinstance(cpf_pagador, str):
-                    return "CPF do pagador inválido."
-                return self.__realizar_pagamento_pix(data_pagamento, atendimento, paciente, valor_pago, cpf_pagador)
-
-            case "3":
-                if not isinstance(numero_cartao, str):
-                    return "Número do cartão inválido."
-                if not isinstance(bandeira, str):
-                    return "Bandeira do cartão inválida."
-                if not isinstance(parcelas, int) or not 1 <= parcelas <= 3:
-                    return "A quantidade de parcelas deve estar entre 1 e 3."
-                return self.__realizar_pagamento_cartao(
-                    data_pagamento,
-                    atendimento,
-                    paciente,
-                    valor_pago,
-                    numero_cartao,
-                    bandeira,
-                    parcelas,
-                )
-
-            case _:
-                return "Opção inválida."
+        try:
+            match tipo:
+                case "1":
+                    return self.__realizar_pagamento_dinheiro(
+                        data_pagamento, atendimento, paciente, valor_pago
+                    )
+                case "2":
+                    if not isinstance(cpf_pagador, str):
+                        return "CPF do pagador inválido."
+                    return self.__realizar_pagamento_pix(
+                        data_pagamento,
+                        atendimento,
+                        paciente,
+                        valor_pago,
+                        cpf_pagador,
+                    )
+                case "3":
+                    if not isinstance(numero_cartao, str):
+                        return "Número do cartão inválido."
+                    if not isinstance(bandeira, str):
+                        return "Bandeira do cartão inválida."
+                    if not isinstance(parcelas, int) or not 1 <= parcelas <= 3:
+                        return "A quantidade de parcelas deve estar entre 1 e 3."
+                    return self.__realizar_pagamento_cartao(
+                        data_pagamento,
+                        atendimento,
+                        paciente,
+                        valor_pago,
+                        numero_cartao,
+                        bandeira,
+                        parcelas,
+                    )
+                case _:
+                    return "Opção inválida."
+        except (
+            AtendimentoJaPagoException,
+            PagamentoAcimaDoValorException,
+            PagamentoAposAtendimentoException,
+            PagamentoInvalidoException,
+        ) as erro:
+            return str(erro)
 
     def __realizar_pagamento_dinheiro(self, data_pagamento, atendimento, paciente, valor_pago):
 
@@ -166,9 +179,17 @@ class ControladorPagamento:
             for pagamento in dados["atendimento"].pagamentos
         )
         if not novo_pagamento_criado:
-            resultado_restauracao = atendimento_original.registrar_pagamento(
-                pagamento_original
-            )
+            try:
+                resultado_restauracao = atendimento_original.registrar_pagamento(
+                    pagamento_original
+                )
+            except (
+                AtendimentoJaPagoException,
+                PagamentoAcimaDoValorException,
+                PagamentoAposAtendimentoException,
+                PagamentoInvalidoException,
+            ) as erro:
+                resultado_restauracao = str(erro)
             if pagamento_original not in atendimento_original.pagamentos:
                 self.__tela_pagamento.mostrar_mensagem(
                     "Falha ao restaurar o pagamento original: "

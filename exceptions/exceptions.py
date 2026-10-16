@@ -26,28 +26,10 @@ class ProfissionalNaoEncontradoException(Exception):
         super().__init__(self.mensagem.format(cpf))
 
 
-class AcompanhanteNaoEncontradoException(Exception):
-    def __init__(self, cpf):
-        self.mensagem = "O acompanhante com CPF {} não foi encontrado"
-        super().__init__(self.mensagem.format(cpf))
-
-
 class ClinicaNaoEncontradaException(Exception):
     def __init__(self, nome):
         self.mensagem = "A clínica {} não foi encontrada"
         super().__init__(self.mensagem.format(nome))
-
-
-class AtendimentoNaoEncontradoException(Exception):
-    def __init__(self):
-        self.mensagem = "O atendimento não foi encontrado"
-        super().__init__(self.mensagem)
-
-
-class AtendimentoConflitanteException(Exception):
-    def __init__(self):
-        self.mensagem = "Já existe um atendimento nesse horário para este profissional"
-        super().__init__(self.mensagem)
 
 
 class HorarioInvalidoException(Exception):
@@ -62,6 +44,20 @@ class AcompanhanteObrigatorioException(Exception):
         super().__init__(self.mensagem)
 
 
+class AtendimentoNaoEncontradoException(Exception):
+    def __init__(self):
+        self.mensagem = "O atendimento não foi encontrado"
+        super().__init__(self.mensagem)
+
+
+class AtendimentoConflitanteException(Exception):
+    def __init__(self):
+        self.mensagem = (
+            "Já existe um atendimento nesse horário para este profissional"
+        )
+        super().__init__(self.mensagem)
+
+
 class PagamentoInvalidoException(Exception):
     def __init__(self):
         self.mensagem = "O pagamento informado é inválido"
@@ -70,13 +66,17 @@ class PagamentoInvalidoException(Exception):
 
 class PagamentoAcimaDoValorException(Exception):
     def __init__(self, valor):
-        self.mensagem = "O valor do pagamento R$ {:.2f} é maior que o valor restante"
+        self.mensagem = (
+            "O valor do pagamento R$ {:.2f} é maior que o valor restante"
+        )
         super().__init__(self.mensagem.format(valor))
 
 
 class PagamentoAposAtendimentoException(Exception):
     def __init__(self):
-        self.mensagem = "O pagamento não pode ser realizado após a data do atendimento"
+        self.mensagem = (
+            "O pagamento não pode ser realizado após a data do atendimento"
+        )
         super().__init__(self.mensagem)
 
 
@@ -100,8 +100,11 @@ class DescricaoProcedimentoVaziaException(Exception):
 
 class ValorProcedimentoInvalidoException(Exception):
     def __init__(self, valor):
-        self.mensagem = "O valor do procedimento R$ {:.2f} deve ser maior que zero"
+        self.mensagem = (
+            "O valor do procedimento R$ {:.2f} deve ser maior que zero"
+        )
         super().__init__(self.mensagem.format(valor))
+
 
 class EntradaInvalidaException(Exception):
     def __init__(self, campo: str = "valor"):

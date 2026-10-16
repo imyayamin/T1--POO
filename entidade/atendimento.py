@@ -2,6 +2,14 @@ from .paciente import Paciente
 from .profissional import Profissional
 from .clinica import Clinica
 from datetime import date, time
+import math
+from exceptions.exceptions import (
+    AtendimentoJaPagoException,
+    PagamentoAcimaDoValorException,
+    PagamentoAposAtendimentoException,
+    PagamentoInvalidoException,
+    ProcedimentoInvalidoException,
+)
 
 class Atendimento:
 
@@ -99,7 +107,7 @@ class Atendimento:
     def adicionar_procedimento(self, procedimento):
 
         if procedimento is None:
-            return "Procedimento inválido!"
+            raise ProcedimentoInvalidoException()
 
         self.__procedimentos.append(procedimento)
 
@@ -127,7 +135,7 @@ class Atendimento:
     def registrar_pagamento(self, pagamento):
 
         if pagamento is None:
-            return "Pagamento inválido."
+            raise PagamentoInvalidoException()
         if pagamento.atendimento != self:
             return "Pagamento não pertence a este atendimento!"
 
@@ -135,21 +143,26 @@ class Atendimento:
             return "O paciente do pagamento não corresponde ao atendimento!"
 
         if pagamento.data_pagamento > self.__data:
-            return "Pagamento deve ser realizado até a data do atendimento!"
+            raise PagamentoAposAtendimentoException()
 
-        if pagamento.valor_pago <= 0:
-            return "O valor pago deve ser maior que zero!"
+        if (
+            not isinstance(pagamento.valor_pago, (int, float))
+            or isinstance(pagamento.valor_pago, bool)
+            or not math.isfinite(pagamento.valor_pago)
+            or pagamento.valor_pago <= 0
+        ):
+            raise PagamentoInvalidoException()
 
         valor_restante = self.calcular_valor_restante()
 
         if valor_restante <= 0:
-            return "O atendimento já foi totalmente pago."
+            raise AtendimentoJaPagoException()
 
         if pagamento.valor_pago > valor_restante:
-            return "Valor pago não pode ser maior que o valor restante!"
+            raise PagamentoAcimaDoValorException(pagamento.valor_pago)
         
         if not pagamento.processar_pagamento():
-            return "Dados do pagamento inválidos!"
+            raise PagamentoInvalidoException()
 
         self.__pagamentos.append(pagamento)
 

@@ -8,7 +8,7 @@ class TelaAtendimento:
         print("2 - Listar atendimentos")
         print("3 - Editar atendimento")
         print("4 - Remover atendimento")
-        print("5 - Listar procedimentos e catálogo de preços")
+        print("5 - Listar procedimentos")
         print("6 - Editar procedimento")
         print("7 - Remover procedimento")
         print("8 - Adicionar procedimento a um atendimento")

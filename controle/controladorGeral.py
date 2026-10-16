@@ -90,6 +90,9 @@ class ControladorGeral:
     def cadastra_tipo_atendimento(self):
         self.__controladorTipoAtendimento.abre_tela()
 
+    def abre_relatorios(self):
+        self.__controladorRelatorio.abre_tela()
+
     def encerra_sistema(self):
         exit(0)
 
@@ -100,7 +103,7 @@ class ControladorGeral:
             3: self.cadastra_clinica,
             4: self.cadastra_atendimento,
             5: self.cadastra_pagamento,
-            6: self.__controladorRelatorio.abre_tela,
+            6: self.abre_relatorios,
             7: self.cadastra_tipo_atendimento,
             0: self.encerra_sistema
         }
